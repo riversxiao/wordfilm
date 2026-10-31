@@ -4483,6 +4483,430 @@
     b6person(ctx, 1380, 600, 220, G.INK); b6down(ctx, 1380, 630, lerp(630, 1060, k), B10LOSS, 11, 1); b8txt(ctx, '卖方：未必有', 1620, 930, 36, G.INK);
     vizCaption(ctx, s, lt, C);
   };
+  // ───────── finance-v003 scene library, batch 14 (BSM / binomial / delta / gamma / vega, 2026-11-01) ─────────
+  // #48 BSM · #49 Binomial Tree · #50 Delta · #51 Gamma · #52 Vega — 41 scenes.
+  // Rules: no tickers/funds/K-lines/gambling; 「假设」 for made-up numbers; avoid ticket/door/giftbox layouts of option-long & put-call-parity.
+  Object.assign(VPAL, {
+    bsm_calc: 'cream', bsm_title: 'gold', bsm_cards: 'cream', bsm_vol: 'purple', bsm_repl: 'cream', bsm_bal: 'ochre', bsm_cost: 'cream', bsm_assump: 'ink', bsm_end: 'cream',
+    bin_blank: 'cream', bin_title: 'gold', bin_fork: 'cream', bin_leaves: 'purple', bin_back: 'cream', bin_root: 'ochre', bin_bsm: 'cream', bin_amer: 'ink', bin_choice: 'cream', bin_end: 'purple',
+    dlt_bars: 'cream', dlt_title: 'gold', dlt_call: 'cream', dlt_put: 'purple', dlt_half: 'cream', dlt_halfup: 'ochre', dlt_hedge: 'cream', dlt_gear: 'ink',
+    gma_jump: 'cream', gma_title: 'gold', gma_gauge: 'cream', gma_weights: 'purple', gma_near: 'cream', gma_pair: 'ochre', gma_end: 'cream',
+    vga_knob: 'cream', vga_title: 'gold', vga_move: 'cream', vga_lock: 'purple', vga_both: 'cream', vga_cloud: 'ochre', vga_fear: 'cream',
+  });
+  const B14LOSS = PAL.red.t[2], B14GAIN = PAL.green.t[2], B14GOLD = PAL.gold.t[2];
+  function b14box(ctx, x, y, w, h, col, r = 18) { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, r); ctx.fill(); }
+  function b14arrow(ctx, x0, y0, x1, y1, col, w = 8) {
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const a = Math.atan2(y1 - y0, x1 - x0); ctx.translate(x1, y1); ctx.rotate(a);
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, -12); ctx.lineTo(-22, 12); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function b14bar(ctx, x, y, w, h, col) { ctx.fillStyle = col; ctx.fillRect(x - w / 2, y - h, w, h); }
+  function b14node(ctx, x, y, r, col) { G.disc(ctx, x, y, r, col); }
+  function b14curve(ctx, pts, col, w, p = 1) {
+    if (pts.length < 2 || p <= 0) return;
+    const n = Math.max(2, Math.floor(pts.length * clamp(p)));
+    ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < n; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); ctx.restore();
+  }
+
+  // ── #48 BSM ──
+  VIZ.bsm_calc = (ctx, s, lt, C) => { // 几项输入滑入计算器，标题「Black-Scholes-Merton」
+    const D = s.vizDur; b6title(ctx, 'Black-Scholes-Merton', W / 2, 200, 64, C.fg, inv(0.05, D * 0.4, lt), 1700);
+    const scr = b7calc(ctx, 960, 700, 520, 620, C.fg, C.bg, C.acc);
+    const labs = ['S', 'K', 'T', 'r', 'σ'];
+    labs.forEach((t, i) => {
+      const p = inv(D * (0.15 + i * 0.08), D * (0.4 + i * 0.08), lt);
+      const x = lerp(200, 700, clamp(p));
+      b14box(ctx, x, 360 + i * 70, 120, 56, C.acc); b8txt(ctx, t, x, 360 + i * 70, 36, C.bg, { en: 1 });
+    });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_title = (ctx, s, lt, C) => { // 标题「BSM 期权定价模型」
+    const D = s.vizDur; b6title(ctx, 'BSM', W / 2, 420, 200, C.fg, inv(0.05, D * 0.5, lt));
+    tag(ctx, '期权定价模型', 960, 620, C, inv(D * 0.35, D * 0.7, lt), { px: 48, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_cards = (ctx, s, lt, C) => { // 四张卡片依次亮起：现价、行权价、时间、利率
+    const D = s.vizDur; const labs = ['现价', '行权价', '时间', '利率'];
+    labs.forEach((t, i) => {
+      const p = E.oBack(inv(D * (0.1 + i * 0.12), D * (0.35 + i * 0.12), lt));
+      const x = 360 + i * 400;
+      ctx.save(); ctx.translate(x, 620); ctx.scale(p + 0.001, p + 0.001);
+      b14box(ctx, 0, 0, 280, 220, C.fg); b8txt(ctx, t, 0, 0, 52, C.bg); ctx.restore();
+    });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_vol = (ctx, s, lt, C) => { // 第五张卡片「波动率」亮起；角标「股票期权再加分红」
+    const D = s.vizDur;
+    ['现价', '行权价', '时间', '利率'].forEach((t, i) => {
+      b14box(ctx, 300 + i * 280, 420, 220, 160, rgba(C.fg, 0.35)); b8txt(ctx, t, 300 + i * 280, 420, 36, C.bg);
+    });
+    const p = E.oBack(inv(D * 0.2, D * 0.55, lt));
+    ctx.save(); ctx.translate(960, 780); ctx.scale(p + 0.001, p + 0.001);
+    b14box(ctx, 0, 0, 360, 200, C.acc); b8txt(ctx, '波动率', 0, 0, 64, C.bg); ctx.restore();
+    tag(ctx, '股票期权再加分红', 960, 260, C, inv(D * 0.5, D * 0.8, lt), { px: 32, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_repl = (ctx, s, lt, C) => { // 标的资产 + 无风险借贷 → 复制出期权现金流
+    const D = s.vizDur;
+    b14box(ctx, 420, 620, 360, 240, C.fg); b8txt(ctx, '标的', 420, 620, 56, C.bg);
+    b14box(ctx, 900, 620, 360, 240, C.acc); b8txt(ctx, '借贷', 900, 620, 56, C.bg);
+    b14arrow(ctx, 1120, 620, 1380, 620, C.fg, 10);
+    const p = E.oBack(inv(D * 0.35, D * 0.7, lt));
+    ctx.save(); ctx.translate(1580, 620); ctx.scale(p + 0.001, p + 0.001);
+    b14box(ctx, 0, 0, 280, 240, B14GOLD); b8txt(ctx, '期权流', 0, 0, 44, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_bal = (ctx, s, lt, C) => { // 天平两边：期权 vs 复制组合，几乎持平
+    const D = s.vizDur; const wob = Math.sin(lt * 2) * 4;
+    ctx.fillStyle = C.fg; ctx.fillRect(920, 480, 80, 360);
+    ctx.save(); ctx.translate(960, 500); ctx.rotate((wob * Math.PI) / 180);
+    ctx.fillStyle = C.fg; ctx.fillRect(-420, -12, 840, 24);
+    b14box(ctx, -280, -90, 260, 140, C.acc); b8txt(ctx, '期权', -280, -90, 48, C.bg);
+    b14box(ctx, 280, -90, 260, 140, B14GOLD); b8txt(ctx, '复制', 280, -90, 48, C.bg);
+    ctx.restore();
+    tag(ctx, '几乎持平', 960, 980, C, inv(D * 0.4, D * 0.75, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_cost = (ctx, s, lt, C) => { // 复制成本数字落到「模型价」
+    const D = s.vizDur; const y = lerp(280, 640, E.oBack(inv(D * 0.15, D * 0.7, lt)));
+    b14box(ctx, 960, y, 420, 180, C.acc); b8txt(ctx, '复制成本', 960, y, 56, C.bg);
+    b14box(ctx, 960, 860, 480, 160, C.fg); b8txt(ctx, '模型价', 960, 860, 64, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_assump = (ctx, s, lt, C) => { // 三条假设徽章：恒定波动、连续对冲、无跳空
+    const D = s.vizDur; const labs = ['恒定波动', '连续对冲', '无跳空'];
+    labs.forEach((t, i) => {
+      const p = E.oBack(inv(D * (0.12 + i * 0.15), D * (0.4 + i * 0.15), lt));
+      ctx.save(); ctx.translate(480 + i * 480, 620); ctx.scale(p + 0.001, p + 0.001);
+      G.disc(ctx, 0, 0, 160, C.fg); b8txt(ctx, t, 0, 0, 40, C.bg); ctx.restore();
+    });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bsm_end = (ctx, s, lt, C) => { // 「模型价」旁划掉「保证成交」
+    const D = s.vizDur;
+    // Distinct from delta half-card: big circular stamp + crossed-out ribbon, not twin rounded cards
+    const k = E.oBack(inv(D * 0.15, D * 0.55, lt));
+    ctx.save(); ctx.translate(700, 620); ctx.scale(k + 0.001, k + 0.001);
+    G.disc(ctx, 0, 0, 220, C.fg); b8txt(ctx, '模型价', 0, 0, 64, C.bg); ctx.restore();
+    const p = clamp(inv(D * 0.35, D * 0.8, lt));
+    ctx.save(); ctx.translate(1400, 620); ctx.globalAlpha = 0.35 + 0.65 * (1 - p);
+    b14box(ctx, 0, 0, 480, 140, C.acc); b8txt(ctx, '保证成交', 0, 0, 52, C.bg);
+    ctx.strokeStyle = B14LOSS; ctx.lineWidth = 16; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-200, -40); ctx.lineTo(-200 + 400 * p, -40 + 80 * p); ctx.stroke();
+    ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #49 Binomial Tree ──
+  VIZ.bin_blank = (ctx, s, lt, C) => { // 空白分叉树展开，标题「Binomial Tree」
+    const D = s.vizDur; b6title(ctx, 'Binomial Tree', W / 2, 180, 72, C.fg, inv(0.05, D * 0.4, lt), 1600);
+    const p = clamp(inv(D * 0.15, D * 0.85, lt));
+    const levels = Math.max(1, Math.floor(p * 4));
+    for (let lv = 0; lv < levels; lv++) {
+      for (let i = 0; i <= lv; i++) {
+        const x = 960 + (i - lv / 2) * 220; const y = 360 + lv * 160;
+        if (lv > 0) {
+          const px = 960 + (Math.min(i, lv - 1) - (lv - 1) / 2) * 220; const py = 360 + (lv - 1) * 160;
+          ctx.strokeStyle = C.fg; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x, y); ctx.stroke();
+        }
+        b14node(ctx, x, y, 28, C.acc);
+      }
+    }
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_title = (ctx, s, lt, C) => { // 标题「二叉树模型」
+    const D = s.vizDur; b6title(ctx, '二叉树模型', W / 2, 520, 120, C.fg, inv(0.05, D * 0.55, lt));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_fork = (ctx, s, lt, C) => { // 一个节点分出上、下两岔
+    const D = s.vizDur; b14node(ctx, 960, 720, 40, C.fg);
+    const p = clamp(inv(D * 0.2, D * 0.7, lt));
+    ctx.strokeStyle = C.acc; ctx.lineWidth = 10; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(960, 720); ctx.lineTo(960 - 280 * p, 720 - 280 * p); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(960, 720); ctx.lineTo(960 + 280 * p, 720 + 280 * p); ctx.stroke();
+    if (p > 0.6) { b14node(ctx, 680, 440, 36, B14GAIN); b14node(ctx, 1240, 1000, 36, B14LOSS); }
+    tag(ctx, '上 / 下', 960, 260, C, inv(D * 0.45, D * 0.8, lt), { px: 44, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_leaves = (ctx, s, lt, C) => { // 树梢各节点标出到期损益
+    const D = s.vizDur; const vals = ['+20', '+5', '0', '−10'];
+    vals.forEach((t, i) => {
+      const x = 420 + i * 360; const y = 520;
+      const p = E.oBack(inv(D * (0.1 + i * 0.1), D * (0.4 + i * 0.1), lt));
+      ctx.save(); ctx.translate(x, y); ctx.scale(p + 0.001, p + 0.001);
+      b14node(ctx, 0, 0, 50, C.fg); b8txt(ctx, t, 0, 90, 40, C.fg, { en: 1 }); ctx.restore();
+    });
+    tag(ctx, '到期损益', 960, 280, C, inv(D * 0.4, D * 0.7, lt), { px: 40, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_back = (ctx, s, lt, C) => { // 数值从树梢倒推回树根
+    const D = s.vizDur; const p = clamp(inv(D * 0.1, D * 0.9, lt));
+    for (let lv = 3; lv >= 0; lv--) {
+      const show = p > (3 - lv) * 0.22;
+      for (let i = 0; i <= lv; i++) {
+        const x = 960 + (i - lv / 2) * 200; const y = 320 + lv * 170;
+        if (lv < 3) {
+          ctx.strokeStyle = rgba(C.fg, 0.4); ctx.lineWidth = 5;
+          ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 100, y + 170); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 100, y + 170); ctx.stroke();
+        }
+        if (show) b14node(ctx, x, y, 26, lv === 0 ? B14GOLD : C.acc);
+      }
+    }
+    b14arrow(ctx, 1700, 900, 1700, 360, C.fg, 8);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_root = (ctx, s, lt, C) => { // 树根亮起「今日价值」
+    const D = s.vizDur;
+    for (let lv = 0; lv < 3; lv++) for (let i = 0; i <= lv; i++) {
+      const x = 960 + (i - lv / 2) * 220; const y = 380 + lv * 180;
+      b14node(ctx, x, y, 22, rgba(C.fg, 0.35));
+    }
+    const p = E.oBack(inv(D * 0.2, D * 0.6, lt));
+    ctx.save(); ctx.translate(960, 380); ctx.scale(p + 0.001, p + 0.001);
+    b14node(ctx, 0, 0, 70, B14GOLD); ctx.restore();
+    tag(ctx, '今日价值', 960, 980, C, inv(D * 0.45, D * 0.8, lt), { px: 44, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_bsm = (ctx, s, lt, C) => { // 多步树与 BSM 曲线逐渐重合
+    const D = s.vizDur; const p = clamp(inv(D * 0.1, D * 0.85, lt));
+    // left: dense tree silhouette
+    for (let lv = 0; lv < 5; lv++) for (let i = 0; i <= lv; i++) {
+      const x = 480 + (i - lv / 2) * 70; const y = 400 + lv * 100;
+      b14node(ctx, x, y, 10, C.acc);
+    }
+    // right: smooth curve
+    const pts = [];
+    for (let i = 0; i <= 20; i++) pts.push([1200 + i * 28, 900 - Math.sqrt(i) * 120 - i * 8]);
+    b14curve(ctx, pts, C.fg, 10, p);
+    tag(ctx, '逼近 BSM', 960, 260, C, inv(D * 0.4, D * 0.75, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_amer = (ctx, s, lt, C) => { // 美式节点上出现「可提前行权」标记
+    const D = s.vizDur;
+    for (let lv = 0; lv < 3; lv++) for (let i = 0; i <= lv; i++) {
+      const x = 960 + (i - lv / 2) * 260; const y = 400 + lv * 180;
+      b14node(ctx, x, y, 30, C.fg);
+      if (lv === 1 && i === 0) {
+        const p = E.oBack(inv(D * 0.3, D * 0.65, lt));
+        ctx.save(); ctx.translate(x + 120, y - 80); ctx.scale(p + 0.001, p + 0.001);
+        b14box(ctx, 0, 0, 260, 100, C.acc); b8txt(ctx, '可提前行权', 0, 0, 32, C.bg); ctx.restore();
+      }
+    }
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_choice = (ctx, s, lt, C) => { // 中途节点弹出选择：行权 / 继续持有
+    const D = s.vizDur; b14node(ctx, 960, 700, 50, C.fg);
+    const p = E.oBack(inv(D * 0.2, D * 0.6, lt));
+    ctx.save(); ctx.globalAlpha = p;
+    b14box(ctx, 560, 420, 320, 160, B14GAIN); b8txt(ctx, '行权', 560, 420, 56, C.bg);
+    b14box(ctx, 1360, 420, 320, 160, C.acc); b8txt(ctx, '继续持有', 1360, 420, 44, C.bg);
+    ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bin_end = (ctx, s, lt, C) => { // 箭头从树梢指向树根
+    const D = s.vizDur;
+    for (let i = 0; i < 4; i++) b14node(ctx, 500 + i * 300, 360, 28, C.acc);
+    b14node(ctx, 960, 900, 48, B14GOLD);
+    const p = clamp(inv(D * 0.2, D * 0.75, lt));
+    b14arrow(ctx, 960, 420, 960, 420 + 400 * p, C.fg, 12);
+    tag(ctx, '从未来倒推回现在', 960, 240, C, inv(D * 0.45, D * 0.8, lt), { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #50 Delta ──
+  VIZ.dlt_bars = (ctx, s, lt, C) => { // 标的价格条动一下，期权价格条跟着动，标题「Delta」
+    const D = s.vizDur; b6title(ctx, 'Delta', W / 2, 200, 120, C.fg, inv(0.05, D * 0.4, lt));
+    const k = 0.5 + 0.5 * Math.sin(lt * 1.6);
+    b14bar(ctx, 640, 900, 160, 120 + k * 280, C.fg);
+    b14bar(ctx, 1280, 900, 160, 80 + k * 140, C.acc);
+    tag(ctx, '标的', 640, 980, C, 1, { px: 32, bg: C.fg, fg: C.bg });
+    tag(ctx, '期权', 1280, 980, C, 1, { px: 32, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_title = (ctx, s, lt, C) => { // 标题旁标「Δ」
+    const D = s.vizDur; b6title(ctx, 'Delta', W / 2 - 80, 480, 160, C.fg, inv(0.05, D * 0.5, lt));
+    const p = E.oBack(inv(D * 0.3, D * 0.65, lt));
+    ctx.save(); ctx.translate(1280, 480); ctx.scale(p + 0.001, p + 0.001);
+    b14box(ctx, 0, 0, 220, 220, C.acc); b8txt(ctx, 'Δ', 0, 0, 120, C.bg, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_call = (ctx, s, lt, C) => { // 看涨刻度 0→1，角标「大致」
+    const D = s.vizDur; ctx.fillStyle = C.fg; ctx.fillRect(360, 700, 1200, 16);
+    for (let i = 0; i <= 10; i++) ctx.fillRect(360 + i * 120, 680, 6, 56);
+    b8txt(ctx, '0', 360, 800, 40, C.fg, { en: 1 }); b8txt(ctx, '1', 1560, 800, 40, C.fg, { en: 1 });
+    const p = clamp(inv(D * 0.15, D * 0.7, lt));
+    G.disc(ctx, 360 + p * 1200, 708, 28, C.acc);
+    tag(ctx, '认购 · 大致', 960, 400, C, inv(D * 0.35, D * 0.7, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_put = (ctx, s, lt, C) => { // 看跌刻度 −1→0，画面「价格往下」用红色向下，口播不说跌
+    const D = s.vizDur; ctx.fillStyle = C.fg; ctx.fillRect(360, 700, 1200, 16);
+    b8txt(ctx, '−1', 360, 800, 40, C.fg, { en: 1 }); b8txt(ctx, '0', 1560, 800, 40, C.fg, { en: 1 });
+    const p = clamp(inv(D * 0.15, D * 0.7, lt));
+    G.disc(ctx, 360 + (1 - p) * 600, 708, 28, C.acc);
+    b6down(ctx, 960, 360, 560, B14LOSS, 12, clamp(inv(D * 0.2, D * 0.6, lt)));
+    tag(ctx, '认沽 · 大致', 960, 280, C, inv(D * 0.4, D * 0.75, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_half = (ctx, s, lt, C) => { // Delta 卡片「0.5」，标的 +1，角标「假设」
+    const D = s.vizDur;
+    b14box(ctx, 640, 620, 420, 280, C.fg); b8txt(ctx, 'Δ 0.5', 640, 620, 72, C.bg, { en: 1 });
+    b14box(ctx, 1280, 620, 420, 280, C.acc); b8txt(ctx, '标的 +1', 1280, 620, 56, C.bg);
+    tag(ctx, '假设', 960, 320, C, inv(D * 0.3, D * 0.65, lt), { px: 36, bg: B14GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_halfup = (ctx, s, lt, C) => { // 期权价格 +0.5
+    const D = s.vizDur; const p = E.oBack(inv(D * 0.15, D * 0.7, lt));
+    b14bar(ctx, 960, 900, 220, 200 + p * 200, C.acc);
+    b8txt(ctx, '+0.5', 960, 420, 96, C.fg, { en: 1 });
+    tag(ctx, '期权价格', 960, 980, C, 1, { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_hedge = (ctx, s, lt, C) => { // 期权仓与反向标的仓相抵，净 Delta 趋近零；不出现下单按钮
+    const D = s.vizDur;
+    b14box(ctx, 520, 620, 400, 260, C.fg); b8txt(ctx, '期权仓', 520, 580, 48, C.bg); b8txt(ctx, '+Δ', 520, 680, 56, C.bg, { en: 1 });
+    b14box(ctx, 1400, 620, 400, 260, C.acc); b8txt(ctx, '标的仓', 1400, 580, 48, C.bg); b8txt(ctx, '−Δ', 1400, 680, 56, C.bg, { en: 1 });
+    const p = clamp(inv(D * 0.3, D * 0.75, lt));
+    b14box(ctx, 960, 320, 360, 140, rgba(C.fg, 0.2 + 0.8 * p)); b8txt(ctx, '净 Δ ≈ 0', 960, 320, 48, C.bg, { en: 1 });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.dlt_gear = (ctx, s, lt, C) => { // 皮带齿轮：标的转一点，期权跟多紧
+    const D = s.vizDur; const rot = lt * 1.2;
+    b6gear(ctx, 640, 620, 160, 12, rot, C.fg, C.bg);
+    b6gear(ctx, 1280, 620, 100, 10, -rot * 0.5, C.acc, C.bg);
+    ctx.strokeStyle = C.fg; ctx.lineWidth = 14; ctx.beginPath();
+    ctx.moveTo(780, 560); ctx.lineTo(1160, 560); ctx.moveTo(780, 680); ctx.lineTo(1160, 680); ctx.stroke();
+    tag(ctx, '跟得有多紧', 960, 980, C, inv(D * 0.35, D * 0.7, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #51 Gamma ──
+  VIZ.gma_jump = (ctx, s, lt, C) => { // Delta 数字在跳动，标题「Gamma」
+    const D = s.vizDur; b6title(ctx, 'Gamma', W / 2, 220, 120, C.fg, inv(0.05, D * 0.4, lt));
+    const v = (0.4 + 0.2 * Math.sin(lt * 3)).toFixed(2);
+    b14box(ctx, 960, 680, 480, 260, C.acc); b8txt(ctx, 'Δ ' + v, 960, 680, 96, C.bg, { en: 1 });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.gma_title = (ctx, s, lt, C) => { // 标的微移，Delta 从 0.5 变成 0.6，标「Γ」
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.75, lt));
+    // Distinct from delta 0.5 card: vertical meter + bouncing Δ chip + Γ badge
+    ctx.fillStyle = C.fg; ctx.fillRect(520, 360, 28, 520);
+    const y = lerp(800, 480, p);
+    b14box(ctx, 534, y, 160, 100, C.acc); b8txt(ctx, 'Δ', 534, y, 56, C.bg, { en: 1 });
+    b8txt(ctx, (0.5 + 0.1 * p).toFixed(1), 534, y + 90, 36, C.fg, { en: 1 });
+    const q = E.oBack(inv(D * 0.35, D * 0.7, lt));
+    ctx.save(); ctx.translate(1400, 620); ctx.scale(q + 0.001, q + 0.001);
+    G.disc(ctx, 0, 0, 180, B14GOLD); b8txt(ctx, 'Γ', 0, 0, 120, C.bg, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.gma_gauge = (ctx, s, lt, C) => { // 速度计旁再加一个加速度计
+    const D = s.vizDur;
+    b6gaugeArc(ctx, 560, 720, 200, C.fg, 16); b6needle(ctx, 560, 720, 160, -Math.PI * 0.7 + lt * 0.3, 10, C.acc);
+    tag(ctx, '速度 Δ', 560, 980, C, 1, { px: 32, bg: C.fg, fg: C.bg });
+    const p = E.oBack(inv(D * 0.3, D * 0.7, lt));
+    ctx.save(); ctx.globalAlpha = p;
+    b6gaugeArc(ctx, 1360, 720, 200, C.fg, 16); b6needle(ctx, 1360, 720, 160, -Math.PI * 0.4, 10, B14GOLD);
+    tag(ctx, '加速度 Γ', 1360, 980, C, 1, { px: 32, bg: C.acc, fg: C.bg });
+    ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.gma_weights = (ctx, s, lt, C) => { // 对冲砝码需要频繁挪动
+    const D = s.vizDur; b14box(ctx, 960, 880, 900, 80, C.fg);
+    for (let i = 0; i < 5; i++) {
+      const x = 560 + i * 200 + Math.sin(lt * 4 + i) * 30;
+      b14box(ctx, x, 700, 100, 140, C.acc); b8txt(ctx, '对冲', x, 700, 28, C.bg);
+    }
+    tag(ctx, '更勤地调整', 960, 320, C, inv(D * 0.35, D * 0.7, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.gma_near = (ctx, s, lt, C) => { // 行权价附近 + 倒计时，Gamma 柱升高
+    const D = s.vizDur;
+    b14box(ctx, 480, 520, 360, 200, C.fg); b8txt(ctx, '行权价', 480, 520, 48, C.bg);
+    b14box(ctx, 480, 820, 360, 200, C.acc); b8txt(ctx, '倒计时', 480, 820, 48, C.bg);
+    const p = clamp(inv(D * 0.15, D * 0.8, lt));
+    b14bar(ctx, 1400, 980, 200, 120 + p * 520, B14GOLD);
+    tag(ctx, 'Γ', 1400, 280, C, inv(D * 0.4, D * 0.7, lt), { px: 56, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.gma_pair = (ctx, s, lt, C) => { // 「Δ 速度」与「Γ 加速度」并排
+    const D = s.vizDur;
+    b14box(ctx, 560, 620, 520, 320, C.fg); b8txt(ctx, 'Δ 速度', 560, 620, 64, C.bg);
+    b14box(ctx, 1360, 620, 520, 320, C.acc); b8txt(ctx, 'Γ 加速度', 1360, 620, 56, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.gma_end = (ctx, s, lt, C) => { // 两个词高亮收束
+    const D = s.vizDur; const p = E.oBack(inv(D * 0.15, D * 0.6, lt));
+    ctx.save(); ctx.translate(960, 560); ctx.scale(p + 0.001, p + 0.001);
+    b8txt(ctx, '德尔塔 · 速度', 0, -80, 64, C.fg);
+    b8txt(ctx, '伽马 · 加速度', 0, 80, 64, C.acc);
+    ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #52 Vega ──
+  VIZ.vga_knob = (ctx, s, lt, C) => { // 波动率旋钮上拧，期权价格柱升高，标题「Vega」
+    const D = s.vizDur; b6title(ctx, 'Vega', W / 2, 200, 120, C.fg, inv(0.05, D * 0.4, lt));
+    const p = clamp(inv(D * 0.1, D * 0.85, lt));
+    G.disc(ctx, 560, 700, 140, C.fg);
+    ctx.save(); ctx.translate(560, 700); ctx.rotate(-0.8 + p * 1.6);
+    ctx.fillStyle = C.acc; ctx.fillRect(-12, -130, 24, 130); ctx.restore();
+    b14bar(ctx, 1400, 980, 200, 160 + p * 480, C.acc);
+    tag(ctx, '波动率', 560, 980, C, 1, { px: 32, bg: C.fg, fg: C.bg });
+    tag(ctx, '期权价', 1400, 280, C, 1, { px: 32, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.vga_title = (ctx, s, lt, C) => { // 标题「Vega」
+    const D = s.vizDur; b6title(ctx, 'Vega', W / 2, 520, 200, C.fg, inv(0.05, D * 0.55, lt));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.vga_move = (ctx, s, lt, C) => { // 波动率 +1%，期权价格跟着动一截
+    const D = s.vizDur;
+    b14box(ctx, 560, 620, 420, 240, C.fg); b8txt(ctx, '波动率 +1%', 560, 620, 48, C.bg);
+    const p = clamp(inv(D * 0.2, D * 0.7, lt));
+    b14bar(ctx, 1400, 900, 180, 160 + p * 280, C.acc);
+    b14arrow(ctx, 820, 620, 1180, 720, C.fg, 10);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.vga_lock = (ctx, s, lt, C) => { // 其他输入锁住，只拧波动率，角标「假设」
+    const D = s.vizDur; const labs = ['现价', '行权价', '时间', '利率'];
+    labs.forEach((t, i) => {
+      b14box(ctx, 320 + i * 280, 420, 220, 140, rgba(C.fg, 0.4)); b8txt(ctx, t, 320 + i * 280, 400, 36, C.bg);
+      b8txt(ctx, '🔒', 320 + i * 280, 460, 36, C.bg, { en: 1 });
+    });
+    const p = E.oBack(inv(D * 0.25, D * 0.65, lt));
+    ctx.save(); ctx.translate(960, 820); ctx.scale(p + 0.001, p + 0.001);
+    G.disc(ctx, 0, 0, 120, C.acc); b8txt(ctx, 'σ', 0, 0, 72, C.bg, { en: 1 }); ctx.restore();
+    tag(ctx, '假设', 960, 240, C, inv(D * 0.35, D * 0.7, lt), { px: 36, bg: B14GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.vga_both = (ctx, s, lt, C) => { // 看涨、看跌两张合约价格一起上移
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.8, lt));
+    const y = lerp(780, 480, p);
+    b14box(ctx, 640, y, 400, 200, B14GAIN); b8txt(ctx, '认购', 640, y, 56, C.bg);
+    b14box(ctx, 1280, y, 400, 200, C.acc); b8txt(ctx, '认沽', 1280, y, 56, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.vga_cloud = (ctx, s, lt, C) => { // 不确定云团变大，权利金加厚
+    const D = s.vizDur; const p = clamp(inv(D * 0.1, D * 0.85, lt));
+    for (let i = 0; i < 5; i++) {
+      G.disc(ctx, 700 + i * 40, 480, 80 + p * 80 + (i % 2) * 20, rgba(C.fg, 0.25));
+    }
+    b14box(ctx, 960, 860, 360 + p * 200, 160 + p * 80, C.acc); b8txt(ctx, '权利金', 960, 860, 48, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.vga_fear = (ctx, s, lt, C) => { // 「害怕程度」滑杆与价格联动
+    const D = s.vizDur; const p = clamp(inv(D * 0.1, D * 0.85, lt));
+    ctx.fillStyle = C.fg; ctx.fillRect(400, 500, 1120, 16);
+    G.disc(ctx, 400 + p * 1120, 508, 36, C.acc);
+    tag(ctx, '害怕程度', 960, 400, C, 1, { px: 36, bg: C.fg, fg: C.bg });
+    b14bar(ctx, 960, 980, 200, 120 + p * 280, B14GOLD);
+    tag(ctx, '价格', 960, 980, C, 1, { px: 32, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
   // ───────── finance-v003 scene library, batch 13 (exchange-vs-otc / ES / duration / convexity / DV01 / yield-curve, 2026-10-31) ─────────
   // #41 场内与场外 · #43 预期尾部损失 · #44 久期 · #45 凸性 · #46 基点价值 · #47 收益率曲线 — 52 scenes.
   // Rules: losses DOWN; no tickers/funds/K-lines/gambling; 「假设」 for made-up numbers; no institution logos;

@@ -562,7 +562,8 @@
         "七拳",
         "齐权",
         "七权",
-        "期全"
+        "期全",
+        "期券"
       ],
       "short": [],
       "note": "qi quan; exchange-vs-otc L07 2026-10-31"
@@ -616,7 +617,13 @@
         "到其",
         "到齐",
         "倒棋",
-        "道棋"
+        "道棋",
+        "到期时",
+        "到骑士",
+        "到期日",
+        "到齐日",
+        "稻奇日",
+        "到棋日"
       ],
       "short": [],
       "note": "dao qi, same pinyin or tone only; put-call-parity small 2026-10-30; +道棋 (contango small, 2026-10-30)"
@@ -624,7 +631,8 @@
     {
       "members": [
         "标的",
-        "标地"
+        "标地",
+        "标得"
       ],
       "short": [],
       "note": "biao di, same pinyin or tone only; put-call-parity small 2026-10-30"
@@ -897,7 +905,9 @@
         "记忆点",
         "知一点",
         "字典",
-        "记一点"
+        "记一点",
+        "纪一点",
+        "记忆店"
       ],
       "short": [],
       "note": "ji yi dian"
@@ -997,7 +1007,9 @@
       "members": [
         "交易台",
         "交一台",
-        "交椅台"
+        "交椅台",
+        "教一台",
+        "交易抬"
       ],
       "short": [],
       "note": "jiao yi tai; dv01 L08"
@@ -1059,6 +1071,245 @@
       ],
       "short": [],
       "note": "wen bian"
+    },
+    {
+      "members": [
+        "德尔塔",
+        "得尔塔",
+        "德尔他",
+        "德塔",
+        "delta",
+        "derta",
+        "dirt",
+        "Δ",
+        "Delta",
+        "DERTA",
+        "Dirt"
+      ],
+      "short": [
+        "Δ"
+      ],
+      "note": "delta"
+    },
+    {
+      "members": [
+        "伽马",
+        "伽玛",
+        "加马",
+        "伽马",
+        "gamma",
+        "gama",
+        "Gama"
+      ],
+      "note": "gamma"
+    },
+    {
+      "members": [
+        "维加",
+        "维伽",
+        "为加",
+        "vega",
+        "为家",
+        "为佳"
+      ],
+      "note": "vega"
+    },
+    {
+      "members": [
+        "布莱克斯科尔斯默顿",
+        "布莱克斯科尔斯默顿",
+        "布拉克斯科尔斯",
+        "布莱克斯科尔斯莫顿",
+        "布莱克斯·科尔斯莫顿",
+        "布拉克斯科尔斯默顿",
+        "布莱克斯克尔斯莫顿",
+        "布莱克斯·克尔斯莫顿"
+      ],
+      "note": "BSM name"
+    },
+    {
+      "members": [
+        "波动率",
+        "波动力",
+        "波段率"
+      ],
+      "note": "vol"
+    },
+    {
+      "members": [
+        "行权价",
+        "行权架",
+        "行全价",
+        "航权价",
+        "行全架"
+      ],
+      "note": "strike"
+    },
+    {
+      "members": [
+        "二叉树",
+        "二叉数",
+        "二查树",
+        "二差数"
+      ],
+      "note": "binomial"
+    },
+    {
+      "members": [
+        "模型价",
+        "摸型价",
+        "莫型价",
+        "模型架",
+        "模型假",
+        "成交的价",
+        "成交的架"
+      ],
+      "note": "model price"
+    },
+    {
+      "members": [
+        "五毛钱",
+        "五毛前",
+        "无毛钱"
+      ],
+      "note": "half yuan"
+    },
+    {
+      "members": [
+        "复制组合",
+        "复制足合",
+        "复制组盒"
+      ],
+      "note": "replicating portfolio"
+    },
+    {
+      "members": [
+        "认购",
+        "认够",
+        "人购"
+      ],
+      "note": "call"
+    },
+    {
+      "members": [
+        "认沽",
+        "认估",
+        "人沽",
+        "认辜"
+      ],
+      "note": "put"
+    },
+    {
+      "members": [
+        "加速度",
+        "加束度",
+        "加束"
+      ],
+      "note": "acceleration"
+    },
+    {
+      "members": [
+        "美式期权",
+        "美式期全",
+        "美式期券",
+        "美式齐全"
+      ],
+      "note": "american option"
+    },
+    {
+      "members": [
+        "现价",
+        "限价",
+        "显价"
+      ],
+      "note": "spot"
+    },
+    {
+      "members": [
+        "无风险利率",
+        "蜂蜜率",
+        "无风险利",
+        "无风利率"
+      ],
+      "note": "risk-free rate"
+    },
+    {
+      "members": [
+        "死记公式",
+        "死计公事",
+        "死记公事",
+        "死计公式"
+      ],
+      "note": "rote formula"
+    },
+    {
+      "members": [
+        "一阶",
+        "一接",
+        "一节"
+      ],
+      "note": "first order"
+    },
+    {
+      "members": [
+        "涨一块",
+        "长一块",
+        "涨1块"
+      ],
+      "note": "up one yuan"
+    },
+    {
+      "members": [
+        "跟得",
+        "跟的"
+      ],
+      "note": "follow tight"
+    },
+    {
+      "members": [
+        "量",
+        "亮"
+      ],
+      "note": "liang measure"
+    },
+    {
+      "members": [
+        "更勤地",
+        "更勤的"
+      ],
+      "note": "more often"
+    },
+    {
+      "members": [
+        "条件不变",
+        "条件不便"
+      ],
+      "note": "ceteris"
+    },
+    {
+      "members": [
+        "觉得",
+        "绝的",
+        "觉的"
+      ],
+      "note": "feel"
+    },
+    {
+      "members": [
+        "步数",
+        "部数",
+        "布数"
+      ],
+      "note": "steps"
+    },
+    {
+      "members": [
+        "这件事的尺子",
+        "这件的尺子",
+        "这件事",
+        "这件"
+      ],
+      "note": "ruler phrase"
     }
   ]
 }
