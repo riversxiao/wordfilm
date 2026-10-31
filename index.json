@@ -118,5 +118,15 @@
   "voiceB": 278,
   "credits": 7815,
   "dur": 117.6
+ },
+ {
+  "slug": "13-bailout",
+  "title": "救市 vs 不救",
+  "seed": 2512,
+  "acc": 0.935,
+  "voiceA": 156,
+  "voiceB": 272,
+  "credits": 9374,
+  "dur": 117.6
  }
 ]
