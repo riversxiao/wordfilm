@@ -58,5 +58,15 @@
   "voiceB": 331,
   "credits": 6246,
   "dur": 117.6
+ },
+ {
+  "slug": "07-options",
+  "title": "买保险 vs 卖保险",
+  "seed": 3423,
+  "acc": 0.97,
+  "voiceA": 165,
+  "voiceB": 350,
+  "credits": 10943,
+  "dur": 117.6
  }
 ]
