@@ -68,5 +68,15 @@
   "voiceB": 350,
   "credits": 10943,
   "dur": 117.6
+ },
+ {
+  "slug": "08-hedge-spec",
+  "title": "对冲 vs 投机",
+  "seed": 1601,
+  "acc": 0.981,
+  "voiceA": 175,
+  "voiceB": 290,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]

@@ -104,21 +104,18 @@ def main():
     out = f'{SB}/rap/runs/{slug}'; os.makedirs(out, exist_ok=True)
     c0 = credits(); print('credits before', c0)
     seeds = [1601 + 911 * k for k in range(4)]
-    tried = []
+    tried, best, checked = [], None, set()
     for seed in seeds:
-        if len(tried) >= takes and any(x['acc'] >= 0.9 for x in tried): break
         compose(S, seed, out); normalize(S, seed, out)
-        sc = json.loads(sh(f'{PY} {HERE}/score.py {out} {seed}'))
-        sc['seed'] = seed; tried.append(sc); print('take', sc)
-    tried.sort(key=lambda x: (-x['acc'] if x['acc'] >= 0.88 else 9, ))
-    best = None
-    for sc in tried:
-        if sc['acc'] < 0.85: continue
-        d = stems(sc['seed'], out)
-        v = json.loads(sh(f'{PY} {HERE}/voices.py {out} {sc["seed"]}'))
-        print('voices', sc['seed'], v)
-        if v['ok'] >= 27 and v['b'] - v['a'] >= 50: best = (sc, v); break
-    if not best: raise SystemExit('no usable take; rerun to try more seeds')
+        sc = json.loads(sh(f'{PY} {HERE}/score.py {out} {seed}')); sc['seed'] = seed; tried.append(sc); print('take', sc)
+        if len(tried) < takes and seed != seeds[-1]: continue
+        for sc in sorted(tried, key=lambda x: -x['acc']):
+            if sc['acc'] < 0.85 or sc['seed'] in checked: continue
+            checked.add(sc['seed']); stems(sc['seed'], out)
+            v = json.loads(sh(f'{PY} {HERE}/voices.py {out} {sc["seed"]}')); print('voices', sc['seed'], v)
+            if v['ok'] >= 27 and v['b'] - v['a'] >= 50: best = (sc, v); break
+        if best: break
+    if not best: raise SystemExit('no usable take')
     sc, v = best; seed = sc['seed']; sel = f'{out}/sel'
     if not os.path.exists(f'{sel}/timing.json'):
         os.makedirs(sel, exist_ok=True); shutil.copy(f'{out}/meta_{seed}.json', f'{sel}/meta.json')
