@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>battle template</title>
+<link rel="stylesheet" href="/films/rap-common/fonts/fonts.css">
+<style>html,body{margin:0;background:#120a2a;overflow:hidden}canvas{display:block}</style>
+</head><body><canvas id="c" width="1080" height="1920"></canvas>
+<script type="module">
+import { loadTiming } from '/films/rap-common/lyric.js';
+import { setup, renderFilm } from './film.js';
+const d = new URLSearchParams(location.search).get('d') || '/films/battle-data/demo';
+const cv = document.getElementById('c'), g = cv.getContext('2d');
+await loadTiming(d + '/timing.json');
+const script = await (await fetch(d + '/script.json')).json();
+const all = JSON.stringify(script).replace(/[\x00-\x7f]/g, '') + '复利侠月光姐旁白合唱你站哪边评论区见';
+await Promise.all([document.fonts.load('900 100px "Noto Sans SC"', all), document.fonts.load('700 100px "Noto Sans SC"', all), document.fonts.load('900 100px "Noto Sans SC"', 'ROUND HOOK FINAL VS 0123456789')]);
+setup(g, script);
+window.render = t => renderFilm(t);
+window.READY = true;
+</script></body></html>
