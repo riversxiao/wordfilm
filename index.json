@@ -148,5 +148,15 @@
   "voiceB": 317,
   "credits": 9374,
   "dur": 117.6
+ },
+ {
+  "slug": "16-cash",
+  "title": "现金为王 vs 满仓",
+  "seed": 2512,
+  "acc": 0.948,
+  "voiceA": 173,
+  "voiceB": 334,
+  "credits": 9374,
+  "dur": 117.6
  }
 ]

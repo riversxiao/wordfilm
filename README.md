@@ -21,5 +21,6 @@
 | 13 | [救市 vs 不救](videos/13-bailout.mp4) | 117.6 s | 93.5% | [歌词与卡片](scripts/13-bailout.json) |
 | 14 | [对冲汇率 vs 不对冲](videos/14-fx-hedge.mp4) | 117.6 s | 98.0% | [歌词与卡片](scripts/14-fx-hedge.json) |
 | 15 | [夏普 vs 绝对收益](videos/15-sharpe.mp4) | 117.6 s | 94.0% | [歌词与卡片](scripts/15-sharpe.json) |
+| 16 | [现金为王 vs 满仓](videos/16-cash.mp4) | 117.6 s | 94.8% | [歌词与卡片](scripts/16-cash.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。
