@@ -18,5 +18,15 @@
   "voiceB": 283,
   "credits": 7815,
   "dur": 117.6
+ },
+ {
+  "slug": "03-var-es",
+  "title": "VaR vs ES",
+  "seed": 4334,
+  "acc": 0.916,
+  "voiceA": 207,
+  "voiceB": 329,
+  "credits": 14071,
+  "dur": 117.6
  }
 ]
