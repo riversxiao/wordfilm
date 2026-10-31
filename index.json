@@ -78,5 +78,15 @@
   "voiceB": 290,
   "credits": 7815,
   "dur": 117.6
+ },
+ {
+  "slug": "09-credit",
+  "title": "高收益债 vs 国债",
+  "seed": 2512,
+  "acc": 0.955,
+  "voiceA": 158,
+  "voiceB": 245,
+  "credits": 9374,
+  "dur": 117.6
  }
 ]

@@ -14,5 +14,6 @@
 | 06 | [加杠杆 vs 不加](videos/06-leverage.mp4) | 117.6 s | 93.9% | [歌词与卡片](scripts/06-leverage.json) |
 | 07 | [买保险 vs 卖保险](videos/07-options.mp4) | 117.6 s | 97.0% | [歌词与卡片](scripts/07-options.json) |
 | 08 | [对冲 vs 投机](videos/08-hedge-spec.mp4) | 117.6 s | 98.1% | [歌词与卡片](scripts/08-hedge-spec.json) |
+| 09 | [高收益债 vs 国债](videos/09-credit.mp4) | 117.6 s | 95.5% | [歌词与卡片](scripts/09-credit.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。
