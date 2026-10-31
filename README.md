@@ -10,5 +10,6 @@
 | 02 | [分散 vs 集中](videos/02-diversify.mp4) | 117.6 s | 94.8% | [歌词与卡片](scripts/02-diversify.json) |
 | 03 | [VaR vs ES](videos/03-var-es.mp4) | 117.6 s | 91.6% | [歌词与卡片](scripts/03-var-es.json) |
 | 04 | [正态 vs 肥尾](videos/04-fat-tails.mp4) | 117.6 s | 92.0% | [歌词与卡片](scripts/04-fat-tails.json) |
+| 05 | [长债 vs 短债](videos/05-duration.mp4) | 117.6 s | 93.0% | [歌词与卡片](scripts/05-duration.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。

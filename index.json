@@ -38,5 +38,15 @@
   "voiceB": 320,
   "credits": 0,
   "dur": 117.6
+ },
+ {
+  "slug": "05-duration",
+  "title": "长债 vs 短债",
+  "seed": 1601,
+  "acc": 0.93,
+  "voiceA": 147,
+  "voiceB": 302,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]
