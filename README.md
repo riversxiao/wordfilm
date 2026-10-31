@@ -16,5 +16,6 @@
 | 08 | [对冲 vs 投机](videos/08-hedge-spec.mp4) | 117.6 s | 98.1% | [歌词与卡片](scripts/08-hedge-spec.json) |
 | 09 | [高收益债 vs 国债](videos/09-credit.mp4) | 117.6 s | 95.5% | [歌词与卡片](scripts/09-credit.json) |
 | 10 | [发债 vs 发股](videos/10-capital-structure.mp4) | 117.6 s | 95.2% | [歌词与卡片](scripts/10-capital-structure.json) |
+| 11 | [分红 vs 回购](videos/11-payout.mp4) | 117.6 s | 96.7% | [歌词与卡片](scripts/11-payout.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。

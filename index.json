@@ -98,5 +98,15 @@
   "voiceB": 336,
   "credits": 7815,
   "dur": 117.6
+ },
+ {
+  "slug": "11-payout",
+  "title": "分红 vs 回购",
+  "seed": 1601,
+  "acc": 0.967,
+  "voiceA": 183,
+  "voiceB": 314,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]
