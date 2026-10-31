@@ -7,5 +7,6 @@
 | # | 对战 | 时长 | 歌词识别率 | 脚本 |
 |---|---|---|---|---|
 | 01 | [主动 vs 被动](videos/01-active-passive.mp4) | 117.6 s | 91.4% | [歌词与卡片](scripts/01-active-passive.json) |
+| 02 | [分散 vs 集中](videos/02-diversify.mp4) | 117.6 s | 94.8% | [歌词与卡片](scripts/02-diversify.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。

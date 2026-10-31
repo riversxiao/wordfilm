@@ -8,5 +8,15 @@
   "voiceB": 339,
   "credits": 0,
   "dur": 117.6
+ },
+ {
+  "slug": "02-diversify",
+  "title": "分散 vs 集中",
+  "seed": 2512,
+  "acc": 0.948,
+  "voiceA": 177,
+  "voiceB": 283,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]
