@@ -19,5 +19,6 @@
 | 11 | [分红 vs 回购](videos/11-payout.mp4) | 117.6 s | 96.7% | [歌词与卡片](scripts/11-payout.json) |
 | 12 | [理性人 vs 损失厌恶](videos/12-behavioral.mp4) | 117.6 s | 95.8% | [歌词与卡片](scripts/12-behavioral.json) |
 | 13 | [救市 vs 不救](videos/13-bailout.mp4) | 117.6 s | 93.5% | [歌词与卡片](scripts/13-bailout.json) |
+| 14 | [对冲汇率 vs 不对冲](videos/14-fx-hedge.mp4) | 117.6 s | 98.0% | [歌词与卡片](scripts/14-fx-hedge.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。

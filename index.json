@@ -128,5 +128,15 @@
   "voiceB": 272,
   "credits": 9374,
   "dur": 117.6
+ },
+ {
+  "slug": "14-fx-hedge",
+  "title": "对冲汇率 vs 不对冲",
+  "seed": 3423,
+  "acc": 0.98,
+  "voiceA": 208,
+  "voiceB": 334,
+  "credits": 10943,
+  "dur": 117.6
  }
 ]
