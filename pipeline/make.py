@@ -67,6 +67,23 @@ def compose(S, seed, out):
         open(f'{out}/meta_{seed}.json' if 'json' in p.get_content_type() else f'{out}/take_{seed}.mp3', 'wb').write(d)
 
 
+def normalize(S, seed, out):
+    # ElevenLabs sometimes splits one lyric line into two timestamp entries: merge them back to the script's 44 lines
+    p = f'{out}/meta_{seed}.json'; M = json.load(open(p)); W = M['words_timestamps']
+    if len(W) == 44: return
+    strip = lambda x: ''.join(c for c in x if c not in "，。、！？ ,.!?")
+    out_w, k = [], 0
+    for L in S['lines']:
+        want = strip(L['text']); acc = None
+        while k < len(W):
+            x = W[k]; k += 1
+            acc = dict(x) if acc is None else {'word': acc['word'] + x['word'], 'start_ms': acc['start_ms'], 'end_ms': x['end_ms']}
+            if len(strip(acc['word'])) >= len(want): break
+        out_w.append(acc)
+    if len(out_w) == 44 and all(o for o in out_w):
+        M['words_timestamps'] = out_w; json.dump(M, open(p, 'w'), ensure_ascii=False); print('normalized', len(W), '-> 44')
+
+
 def stems(seed, out):
     d = f'{out}/st_{seed}'
     if os.path.exists(f'{d}/vocals.mp3'): return d
@@ -90,7 +107,7 @@ def main():
     tried = []
     for seed in seeds:
         if len(tried) >= takes and any(x['acc'] >= 0.9 for x in tried): break
-        compose(S, seed, out)
+        compose(S, seed, out); normalize(S, seed, out)
         sc = json.loads(sh(f'{PY} {HERE}/score.py {out} {seed}'))
         sc['seed'] = seed; tried.append(sc); print('take', sc)
     tried.sort(key=lambda x: (-x['acc'] if x['acc'] >= 0.88 else 9, ))

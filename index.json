@@ -28,5 +28,15 @@
   "voiceB": 329,
   "credits": 14071,
   "dur": 117.6
+ },
+ {
+  "slug": "04-fat-tails",
+  "title": "正态 vs 肥尾",
+  "seed": 2512,
+  "acc": 0.92,
+  "voiceA": 152,
+  "voiceB": 320,
+  "credits": 0,
+  "dur": 117.6
  }
 ]
