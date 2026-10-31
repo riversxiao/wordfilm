@@ -88,5 +88,15 @@
   "voiceB": 245,
   "credits": 9374,
   "dur": 117.6
+ },
+ {
+  "slug": "10-capital-structure",
+  "title": "发债 vs 发股",
+  "seed": 2512,
+  "acc": 0.952,
+  "voiceA": 176,
+  "voiceB": 336,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]
