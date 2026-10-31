@@ -108,5 +108,15 @@
   "voiceB": 314,
   "credits": 7815,
   "dur": 117.6
+ },
+ {
+  "slug": "12-behavioral",
+  "title": "理性人 vs 损失厌恶",
+  "seed": 1601,
+  "acc": 0.958,
+  "voiceA": 185,
+  "voiceB": 278,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]
