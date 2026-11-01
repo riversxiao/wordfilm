@@ -27,5 +27,6 @@
 | 19 | [一次性付款 vs 分期](videos/19-pay-installment.mp4) | 117.6 s | 97.9% | [歌词与卡片](scripts/19-pay-installment.json) |
 | 20 | [定投 vs 一把梭](videos/20-dca-lump.mp4) | 117.6 s | 98.9% | [歌词与卡片](scripts/20-dca-lump.json) |
 | 21 | [买保险 vs 不买](videos/21-insurance.mp4) | 117.6 s | 97.2% | [歌词与卡片](scripts/21-insurance.json) |
+| 22 | [稳定工作 vs 自由职业](videos/22-job-freelance.mp4) | 117.6 s | 94.7% | [歌词与卡片](scripts/22-job-freelance.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。

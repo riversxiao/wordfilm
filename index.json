@@ -208,5 +208,15 @@
   "voiceB": 263,
   "credits": 7815,
   "dur": 117.6
+ },
+ {
+  "slug": "22-job-freelance",
+  "title": "稳定工作 vs 自由职业",
+  "seed": 2512,
+  "acc": 0.947,
+  "voiceA": 140,
+  "voiceB": 259,
+  "credits": 9374,
+  "dur": 117.6
  }
 ]
