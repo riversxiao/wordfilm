@@ -23,5 +23,6 @@
 | 15 | [夏普 vs 绝对收益](videos/15-sharpe.mp4) | 117.6 s | 94.0% | [歌词与卡片](scripts/15-sharpe.json) |
 | 16 | [现金为王 vs 满仓](videos/16-cash.mp4) | 117.6 s | 94.8% | [歌词与卡片](scripts/16-cash.json) |
 | 17 | [买房 vs 租房](videos/17-buy-rent.mp4) | 117.6 s | 98.2% | [歌词与卡片](scripts/17-buy-rent.json) |
+| 18 | [存钱 vs 花钱享受](videos/18-save-spend.mp4) | 117.6 s | 98.7% | [歌词与卡片](scripts/18-save-spend.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。
