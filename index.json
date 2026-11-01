@@ -248,5 +248,15 @@
   "voiceB": 282,
   "credits": 9374,
   "dur": 117.6
+ },
+ {
+  "slug": "26-trend-research",
+  "title": "跟风买爆款 vs 自己研究",
+  "seed": 4334,
+  "acc": 0.986,
+  "voiceA": 199,
+  "voiceB": 323,
+  "credits": 17189,
+  "dur": 117.6
  }
 ]

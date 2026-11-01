@@ -31,5 +31,6 @@
 | 23 | [存银行 vs 买理财](videos/23-bank-wealth.mp4) | 117.6 s | 98.3% | [歌词与卡片](scripts/23-bank-wealth.json) |
 | 24 | [借钱给朋友 vs 不借](videos/24-lend-friend.mp4) | 117.6 s | 98.5% | [歌词与卡片](scripts/24-lend-friend.json) |
 | 25 | [早还房贷 vs 拿去投资](videos/25-prepay-invest.mp4) | 117.6 s | 96.4% | [歌词与卡片](scripts/25-prepay-invest.json) |
+| 26 | [跟风买爆款 vs 自己研究](videos/26-trend-research.mp4) | 117.6 s | 98.6% | [歌词与卡片](scripts/26-trend-research.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。
