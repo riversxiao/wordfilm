@@ -158,5 +158,15 @@
   "voiceB": 334,
   "credits": 9374,
   "dur": 117.6
+ },
+ {
+  "slug": "17-buy-rent",
+  "title": "买房 vs 租房",
+  "seed": 1601,
+  "acc": 0.982,
+  "voiceA": 144,
+  "voiceB": 289,
+  "credits": 7815,
+  "dur": 117.6
  }
 ]

@@ -12,7 +12,7 @@ else:
     run(f'git worktree add -q --detach {WT}'); run('git checkout -q --orphan econ-battles && git rm -rq --cached . && find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +', WT)
 os.makedirs(f'{WT}/videos', exist_ok=True); os.makedirs(f'{WT}/scripts', exist_ok=True); os.makedirs(f'{WT}/pipeline', exist_ok=True)
 shutil.copy(vid, f'{WT}/videos/{S["slug"]}.mp4'); shutil.copy(sys.argv[1], f'{WT}/scripts/{S["slug"]}.json')
-for f in ('make.py', 'score.py', 'voices.py', 'upload.py'): shutil.copy(f'{HERE}/{f}', f'{WT}/pipeline/{f}')
+for f in ('make.py', 'score.py', 'voices.py', 'upload.py', 'STYLE-PLAIN.md'): shutil.copy(f'{HERE}/{f}', f'{WT}/pipeline/{f}')
 for f in ('film.js', 'cards.js', 'index.html'): shutil.copy(f'{LIB}/films/battle-tpl/{f}', f'{WT}/pipeline/{f}')
 shutil.copy('/projects/sandbox/rap/build_timing.py', f'{WT}/pipeline/build_timing.py')
 idx = f'{WT}/index.json'; I = json.load(open(idx)) if os.path.exists(idx) else []
