@@ -15,6 +15,8 @@ shutil.copy(vid, f'{WT}/videos/{S["slug"]}.mp4'); shutil.copy(sys.argv[1], f'{WT
 for f in ('make.py', 'score.py', 'voices.py', 'upload.py', 'STYLE-PLAIN.md'): shutil.copy(f'{HERE}/{f}', f'{WT}/pipeline/{f}')
 for f in ('film.js', 'cards.js', 'index.html'): shutil.copy(f'{LIB}/films/battle-tpl/{f}', f'{WT}/pipeline/{f}')
 shutil.copy('/projects/sandbox/rap/build_timing.py', f'{WT}/pipeline/build_timing.py')
+os.makedirs(f'{WT}/pipeline/rap-common/fonts', exist_ok=True)
+for f in ('lyric.js', 'fonts/fonts.css'): shutil.copy(f'{LIB}/films/rap-common/{f}', f'{WT}/pipeline/rap-common/{f}')
 idx = f'{WT}/index.json'; I = json.load(open(idx)) if os.path.exists(idx) else []
 I = [x for x in I if x['slug'] != S['slug']] + [R]; I.sort(key=lambda x: x['slug']); json.dump(I, open(idx, 'w'), ensure_ascii=False, indent=1)
 rows = '\n'.join(f"| {x['slug'][:2]} | [{x['title']}](videos/{x['slug']}.mp4) | {x['dur']} s | {round(x['acc']*100,1)}% | [歌词与卡片](scripts/{x['slug']}.json) |" for x in I)
