@@ -74,6 +74,9 @@ for i, x in enumerate(lines):
     pys = [p[0] for p in pinyin(text, style=Style.NORMAL)]
     ini = [p[0] for p in pinyin(text, style=Style.INITIALS, strict=False)]
     fin = [p[0] for p in pinyin(text, style=Style.FINALS, strict=False)]
+    if not (len(pys) == len(ini) == len(fin) == len(text)):   # Latin runs like "App" come back as one item: fall back to per-char
+        one = lambda c, st: pinyin(c, style=st, strict=False)[0][0]
+        pys = [one(c, Style.NORMAL) for c in text]; ini = [one(c, Style.INITIALS) for c in text]; fin = [one(c, Style.FINALS) for c in text]
     cs, j = [], 0
     for c in x["word"]:
         if c in P:

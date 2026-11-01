@@ -28,6 +28,7 @@
 | 20 | [定投 vs 一把梭](videos/20-dca-lump.mp4) | 117.6 s | 98.9% | [歌词与卡片](scripts/20-dca-lump.json) |
 | 21 | [买保险 vs 不买](videos/21-insurance.mp4) | 117.6 s | 97.2% | [歌词与卡片](scripts/21-insurance.json) |
 | 22 | [稳定工作 vs 自由职业](videos/22-job-freelance.mp4) | 117.6 s | 94.7% | [歌词与卡片](scripts/22-job-freelance.json) |
+| 23 | [存银行 vs 买理财](videos/23-bank-wealth.mp4) | 117.6 s | 98.3% | [歌词与卡片](scripts/23-bank-wealth.json) |
 | 24 | [借钱给朋友 vs 不借](videos/24-lend-friend.mp4) | 117.6 s | 98.5% | [歌词与卡片](scripts/24-lend-friend.json) |
 
 `pipeline/` 是生成用的代码（模板 film.js / cards.js 和流水线 make.py），`scripts/` 是每部片的脚本。
