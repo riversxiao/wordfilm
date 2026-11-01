@@ -841,7 +841,10 @@
     {
       "members": [
         "预期",
-        "与其"
+        "与其",
+        "玉奇",
+        "与期",
+        "预奇"
       ],
       "short": [],
       "note": "yu qi; expected-shortfall L03 2026-10-31"
@@ -1099,7 +1102,10 @@
         "伽马",
         "gamma",
         "gama",
-        "Gama"
+        "Gama",
+        "Gamma",
+        "GAMMA",
+        "Γ"
       ],
       "note": "gamma"
     },
@@ -1310,6 +1316,213 @@
         "这件"
       ],
       "note": "ruler phrase"
+    },
+    {
+      "members": [
+        "西塔",
+        "希塔",
+        "稀塔",
+        "Theta",
+        "theta",
+        "Θ",
+        "cita",
+        "Cita",
+        "CITA",
+        "希他",
+        "西他",
+        "θ"
+      ],
+      "note": "theta; theta-v001 L02/L04 2026-11-01"
+    },
+    {
+      "members": [
+        "负的",
+        "附的"
+      ],
+      "note": "fu de; theta-v001 L04 2026-11-01"
+    },
+    {
+      "members": [
+        "评级",
+        "平极",
+        "评极",
+        "平级",
+        "评绩",
+        "平绩"
+      ],
+      "note": "ping ji; credit-rating-v001 L02 2026-11-01"
+    },
+    {
+      "members": [
+        "临近",
+        "臨近"
+      ],
+      "note": "traditional Whisper; theta-v001 L06 2026-11-01"
+    },
+    {
+      "members": [
+        "护身符",
+        "护身服",
+        "护身福"
+      ],
+      "note": "credit-rating-v001 L10 whisper"
+    },
+    {
+      "members": [
+        "越低",
+        "月低"
+      ],
+      "note": "credit-rating-v001 L05 whisper"
+    },
+    {
+      "members": [
+        "高收益级",
+        "高收易级",
+        "高收易集",
+        "高收益集",
+        "高收异级"
+      ],
+      "note": "credit-rating-v001 L04 whisper"
+    },
+    {
+      "members": [
+        "投机级",
+        "投机集",
+        "头击级",
+        "头击击",
+        "投机击"
+      ],
+      "note": "credit-rating L04"
+    },
+    {
+      "members": [
+        "机构",
+        "机购",
+        "机构的"
+      ],
+      "note": "credit-rating L02 truncation risk"
+    },
+    {
+      "members": [
+        "清偿",
+        "清常",
+        "清尝",
+        "清长",
+        "清场"
+      ],
+      "note": "lgd L07"
+    },
+    {
+      "members": [
+        "收回得多",
+        "收回的多"
+      ],
+      "note": "lgd L07"
+    },
+    {
+      "members": [
+        "违约损失率",
+        "维约损失率",
+        "伪约损失率",
+        "违约顺势律",
+        "维约顺势律",
+        "伪约顺势律",
+        "违约顺势率"
+      ],
+      "note": "lgd L08; +顺势律 2026-11-01"
+    },
+    {
+      "members": [
+        "亏几成",
+        "开几成",
+        "开给行",
+        "亏给行"
+      ],
+      "note": "lgd L08"
+    },
+    {
+      "members": [
+        "一档",
+        "一党"
+      ],
+      "note": "credit L03"
+    },
+    {
+      "members": [
+        "授信",
+        "寿性",
+        "受信",
+        "授性"
+      ],
+      "note": "ead L03"
+    },
+    {
+      "members": [
+        "拨备",
+        "波倍",
+        "波备",
+        "拨倍"
+      ],
+      "note": "eul L05"
+    },
+    {
+      "members": [
+        "年份里",
+        "年分离",
+        "年份里"
+      ],
+      "note": "eul L06"
+    },
+    {
+      "members": [
+        "进成本",
+        "进程本"
+      ],
+      "note": "eul L09"
+    },
+    {
+      "members": [
+        "意外的",
+        "意外地"
+      ],
+      "note": "eul L09"
+    },
+    {
+      "members": [
+        "那一块",
+        "内一块",
+        "那1块",
+        "内1块"
+      ],
+      "note": "eul L02"
+    },
+    {
+      "members": [
+        "三样一乘",
+        "三样一成"
+      ],
+      "note": "ead/eul"
+    },
+    {
+      "members": [
+        "八千",
+        "8000",
+        "8千"
+      ],
+      "note": "ead L07"
+    },
+    {
+      "members": [
+        "出了事亏几成",
+        "出了事开几成",
+        "出走时开给行",
+        "则就是开给行",
+        "出了事开给行",
+        "出走时开几成",
+        "则就是开几成",
+        "出走时亏几成"
+      ],
+      "note": "lgd L08 ending Whisper garble 2026-11-01"
     }
   ]
 }

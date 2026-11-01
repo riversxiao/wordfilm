@@ -4483,6 +4483,784 @@
     b6person(ctx, 1380, 600, 220, G.INK); b6down(ctx, 1380, 630, lerp(630, 1060, k), B10LOSS, 11, 1); b8txt(ctx, '卖方：未必有', 1620, 930, 36, G.INK);
     vizCaption(ctx, s, lt, C);
   };
+  // ───────── finance-v003 scene library, batch 16 (stress / scenario / backtesting / hist-sim, 2026-11-01) ─────────
+  // #59 Stress Testing · #60 Scenario Analysis · #61 Backtesting · #62 Historical Simulation — 32 scenes.
+  Object.assign(VPAL, {
+    str_storm: 'cream', str_title: 'gold', str_gauges: 'cream', str_extreme: 'purple', str_hold: 'cream', str_nopred: 'ochre', str_stage: 'cream', str_end: 'ink',
+    scn_board: 'cream', scn_title: 'gold', scn_story: 'cream', scn_loss: 'purple', scn_pair: 'cream', scn_shock: 'ochre', scn_scripts: 'cream', scn_end: 'ink',
+    bkt_line: 'cream', bkt_title: 'gold', bkt_100: 'cream', bkt_grid: 'purple', bkt_gap: 'cream', bkt_knob: 'ochre', bkt_card: 'cream', bkt_end: 'ink',
+    hsm_stack: 'cream', hsm_title: 'gold', hsm_tomorrow: 'cream', hsm_rank: 'purple', hsm_fat: 'cream', hsm_bolt: 'ochre', hsm_window: 'cream', hsm_end: 'ink',
+  });
+  const B16LOSS = PAL.red.t[2], B16GAIN = PAL.green.t[2], B16GOLD = PAL.gold.t[2], B16ORANGE = PAL.ochre.t[2];
+  function b16box(ctx, x, y, w, h, col, r = 18) { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, r); ctx.fill(); }
+  function b16arrow(ctx, x0, y0, x1, y1, col, w = 8) {
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const a = Math.atan2(y1 - y0, x1 - x0); ctx.translate(x1, y1); ctx.rotate(a);
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, -12); ctx.lineTo(-22, 12); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function b16bar(ctx, x, y, w, h, col) { ctx.fillStyle = col; ctx.fillRect(x - w / 2, y - h, w, h); }
+
+  // ── #59 Stress Testing ──
+  VIZ.str_storm = (ctx, s, lt, C) => { // 晴天日历被撕开，露出风暴页，标题「Stress Testing」
+    const D = s.vizDur; b6title(ctx, 'Stress Testing', W / 2, 180, 72, C.fg, inv(0.05, D * 0.4, lt), 1500);
+    const p = clamp(inv(D * 0.2, D * 0.75, lt));
+    b16box(ctx, 700, 700, 420, 480, C.fg); b8txt(ctx, '晴', 700, 620, 80, C.bg); b8txt(ctx, '日', 700, 760, 56, C.bg);
+    ctx.save(); ctx.translate(lerp(1400, 1100, p), 700); ctx.rotate(-0.15 * p);
+    b16box(ctx, 0, 0, 420, 480, B16LOSS); b8txt(ctx, '风暴', 0, 0, 64, G.CREAM); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_title = (ctx, s, lt, C) => { // 标题「压力测试」
+    const D = s.vizDur; b6title(ctx, '压力测试', W / 2, 560, 120, C.fg, inv(0.05, D * 0.55, lt));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_gauges = (ctx, s, lt, C) => { // 三组仪表同时飙红，角标「假设」
+    const D = s.vizDur; const labs = ['利率', '房价', '违约率'];
+    labs.forEach((t, i) => {
+      const p = clamp(inv(D * (0.1 + i * 0.1), D * (0.5 + i * 0.1), lt));
+      const x = 400 + i * 560;
+      G.disc(ctx, x, 620, 160, C.fg);
+      ctx.save(); ctx.translate(x, 620); ctx.rotate(-1.2 + p * 2.0);
+      ctx.strokeStyle = B16LOSS; ctx.lineWidth = 14; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -120); ctx.stroke(); ctx.restore();
+      b8txt(ctx, t, x, 860, 40, C.fg);
+    });
+    tag(ctx, '假设', 960, 260, C, inv(D * 0.35, D * 0.65, lt), { px: 36, bg: B16GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_extreme = (ctx, s, lt, C) => { // 冲击刻度停在「极端但可想象」
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.75, lt));
+    ctx.fillStyle = C.fg; ctx.fillRect(360, 700, 1200, 40);
+    G.disc(ctx, 360 + 1200 * p * 0.85, 720, 36, B16LOSS);
+    tag(ctx, '极端但可想象', 360 + 1200 * p * 0.85, 560, C, inv(D * 0.4, D * 0.75, lt), { px: 36, bg: B16LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_hold = (ctx, s, lt, C) => { // 资本缓冲垫被压弯，旁边一个问号
+    const D = s.vizDur; const p = clamp(inv(D * 0.2, D * 0.8, lt));
+    ctx.save(); ctx.translate(700, 780); ctx.scale(1, 1 - 0.25 * p);
+    b16box(ctx, 0, 0, 700, 200, C.fg); b8txt(ctx, '资本缓冲', 0, 0, 48, C.bg); ctx.restore();
+    b16box(ctx, 700, 420 + p * 80, 360, 160, B16LOSS); b8txt(ctx, '冲击', 700, 420 + p * 80, 48, G.CREAM);
+    const q = E.oBack(inv(D * 0.4, D * 0.75, lt));
+    ctx.save(); ctx.translate(1400, 560); ctx.scale(q + 0.001, q + 0.001);
+    b8txt(ctx, '?', 0, 0, 180, B16LOSS, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_nopred = (ctx, s, lt, C) => { // 划掉「预测明天」四个字
+    const D = s.vizDur;
+    b16box(ctx, 960, 560, 720, 220, C.fg); b8txt(ctx, '预测明天', 960, 560, 64, C.bg);
+    const p = clamp(inv(D * 0.35, D * 0.75, lt));
+    ctx.save(); ctx.strokeStyle = B16LOSS; ctx.lineWidth = 16; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(640, 500); ctx.lineTo(640 + 640 * p, 500 + 120 * p); ctx.stroke(); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_stage = (ctx, s, lt, C) => { // 舞台上提前排演坏天气场景
+    const D = s.vizDur;
+    ctx.fillStyle = C.fg; ctx.fillRect(360, 860, 1200, 40);
+    b16box(ctx, 960, 700, 1000, 200, rgba(C.fg, 0.2));
+    b6person(ctx, 700, 780, 1.4, C.fg); b6person(ctx, 1100, 780, 1.4, C.fg);
+    const p = E.oBack(inv(D * 0.3, D * 0.65, lt));
+    ctx.save(); ctx.translate(960, 400); ctx.scale(p + 0.001, p + 0.001);
+    b16box(ctx, 0, 0, 420, 160, B16LOSS); b8txt(ctx, '坏天气', 0, 0, 48, G.CREAM); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.str_end = (ctx, s, lt, C) => { // 「坏日子」剧本合上，盖章「已演练」
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.7, lt));
+    b16box(ctx, 800, 620, 360, 480, C.fg); b8txt(ctx, '坏日子', 800, 620, 48, C.bg);
+    ctx.save(); ctx.translate(lerp(1400, 1100, p), 620); ctx.rotate(-0.1);
+    b16box(ctx, 0, 0, 360, 480, C.acc); ctx.restore();
+    const q = E.oBack(inv(D * 0.45, D * 0.8, lt));
+    ctx.save(); ctx.translate(1400, 620); ctx.scale(q + 0.001, q + 0.001); ctx.rotate(-0.2);
+    G.disc(ctx, 0, 0, 140, B16GOLD); b8txt(ctx, '已演练', 0, 0, 40, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #60 Scenario Analysis ──
+  VIZ.scn_board = (ctx, s, lt, C) => { // 故事板翻开，标题「Scenario Analysis」
+    const D = s.vizDur; b6title(ctx, 'Scenario Analysis', W / 2, 180, 72, C.fg, inv(0.05, D * 0.4, lt), 1600);
+    const p = clamp(inv(D * 0.2, D * 0.75, lt));
+    b16box(ctx, 700, 700, 420, 480, C.fg);
+    ctx.save(); ctx.translate(lerp(700, 1200, p), 700); ctx.rotate(0.05 * p);
+    b16box(ctx, 0, 0, 420, 480, C.acc); b8txt(ctx, '故事', 0, 0, 64, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_title = (ctx, s, lt, C) => { // 标题「情景分析」
+    const D = s.vizDur; b6title(ctx, '情景分析', W / 2, 560, 120, C.fg, inv(0.05, D * 0.55, lt));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_story = (ctx, s, lt, C) => { // 故事线串起利率、房价、违约率几根线
+    const D = s.vizDur; const labs = ['利率', '房价', '违约率'];
+    labs.forEach((t, i) => {
+      const y = 420 + i * 180;
+      b16box(ctx, 500, y, 280, 120, C.fg); b8txt(ctx, t, 500, y, 40, C.bg);
+      const p = clamp(inv(D * (0.15 + i * 0.12), D * (0.5 + i * 0.12), lt));
+      b16arrow(ctx, 680, y, 680 + 700 * p, y, C.acc, 10);
+    });
+    tag(ctx, '故事线', 1500, 620, C, inv(D * 0.5, D * 0.8, lt), { px: 36, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_loss = (ctx, s, lt, C) => { // 故事线汇入一张亏损数字
+    const D = s.vizDur;
+    ctx.save(); ctx.strokeStyle = C.fg; ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(400, 400); ctx.lineTo(900, 620); ctx.lineTo(400, 840); ctx.stroke(); ctx.restore();
+    const q = E.oBack(inv(D * 0.3, D * 0.7, lt));
+    ctx.save(); ctx.translate(1300, 620); ctx.scale(q + 0.001, q + 0.001);
+    b16box(ctx, 0, 0, 420, 240, B16LOSS); b8txt(ctx, '亏损', 0, 0, 64, G.CREAM); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_pair = (ctx, s, lt, C) => { // 两张卡片并排：「压力测试」「情景分析」
+    const D = s.vizDur;
+    [['压力测试', 560], ['情景分析', 1360]].forEach(([t, x], i) => {
+      const p = E.oBack(inv(D * (0.15 + i * 0.15), D * (0.45 + i * 0.15), lt));
+      ctx.save(); ctx.translate(x, 620); ctx.scale(p + 0.001, p + 0.001);
+      b16box(ctx, 0, 0, 560, 360, i ? C.acc : C.fg); b8txt(ctx, t, 0, 0, 56, i ? C.bg : C.bg); ctx.restore();
+    });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_shock = (ctx, s, lt, C) => { // 左边冲击波，右边故事书
+    const D = s.vizDur;
+    // shock waves
+    for (let i = 0; i < 4; i++) {
+      const p = clamp(inv(D * (0.1 + i * 0.08), D * (0.4 + i * 0.08), lt));
+      ctx.save(); ctx.strokeStyle = rgba(B16LOSS, 0.5 + 0.1 * i); ctx.lineWidth = 10;
+      ctx.beginPath(); ctx.arc(560, 620, 60 + i * 70 * p, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    }
+    b16box(ctx, 1400, 620, 360, 440, C.fg); b8txt(ctx, '故事', 1400, 620, 56, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_scripts = (ctx, s, lt, C) => { // 两本剧本：一本「历史」，一本「假想」
+    const D = s.vizDur;
+    b16box(ctx, 560, 620, 400, 480, C.fg); b8txt(ctx, '历史', 560, 620, 64, C.bg);
+    b16box(ctx, 1360, 620, 400, 480, C.acc); b8txt(ctx, '假想', 1360, 620, 64, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.scn_end = (ctx, s, lt, C) => { // 故事板合上，账本翻开
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.75, lt));
+    b16box(ctx, lerp(700, 500, p), 620, 360, 440, C.fg); b8txt(ctx, '故事', lerp(700, 500, p), 620, 48, C.bg);
+    const q = E.oBack(inv(D * 0.4, D * 0.8, lt));
+    ctx.save(); ctx.translate(1300, 620); ctx.scale(q + 0.001, q + 0.001);
+    b6doc(ctx, 0, 0, 320, 420, C.acc, C.bg, 1); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #61 Backtesting ──
+  VIZ.bkt_line = (ctx, s, lt, C) => { // 一条风险线，日历往回翻，越过次数打点，标题「Backtesting」
+    const D = s.vizDur; b6title(ctx, 'Backtesting', W / 2, 180, 80, C.fg, inv(0.05, D * 0.4, lt), 1400);
+    ctx.strokeStyle = C.fg; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(300, 620); ctx.lineTo(1620, 620); ctx.stroke();
+    const p = clamp(inv(D * 0.2, D * 0.85, lt));
+    const hits = [0.2, 0.45, 0.7, 0.88];
+    hits.forEach((h, i) => {
+      if (p > h) { G.disc(ctx, 300 + h * 1320, 620 - 80, 22, B16LOSS); }
+    });
+    b16box(ctx, 1500, 860, 280, 180, C.acc); b8txt(ctx, '日历', 1500, 860, 40, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_title = (ctx, s, lt, C) => { // 标题「回测」
+    const D = s.vizDur; b6title(ctx, '回测', W / 2, 560, 160, C.fg, inv(0.05, D * 0.55, lt));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_100 = (ctx, s, lt, C) => { // VaR 线旁写「约 1/100」，角标「假设，接 VaR」
+    const D = s.vizDur;
+    ctx.strokeStyle = C.fg; ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(300, 700); ctx.lineTo(1620, 700); ctx.stroke();
+    tag(ctx, '约 1/100', 960, 560, C, inv(D * 0.3, D * 0.65, lt), { px: 48, bg: C.acc, fg: C.bg });
+    tag(ctx, '假设，接 VaR', 960, 900, C, inv(D * 0.45, D * 0.8, lt), { px: 32, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_grid = (ctx, s, lt, C) => { // 一百格日历，越过的格子标红
+    const D = s.vizDur;
+    for (let i = 0; i < 100; i++) {
+      const x = 260 + (i % 20) * 70; const y = 360 + Math.floor(i / 20) * 110;
+      const bad = [7, 23, 41, 66, 88].includes(i);
+      const p = clamp(inv(D * (0.05 + i * 0.006), D * (0.25 + i * 0.006), lt));
+      if (p > 0.2) b16box(ctx, x, y, 56, 90, bad ? B16LOSS : C.fg, 8);
+    }
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_gap = (ctx, s, lt, C) => { // 承诺次数和实际次数并排，差距亮红
+    const D = s.vizDur;
+    b16box(ctx, 560, 560, 480, 320, C.fg); b8txt(ctx, '承诺 1', 560, 560, 56, C.bg);
+    b16box(ctx, 1360, 560, 480, 320, B16LOSS); b8txt(ctx, '实际 5', 1360, 560, 56, G.CREAM);
+    tag(ctx, '差距', 960, 900, C, inv(D * 0.4, D * 0.75, lt), { px: 40, bg: B16LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_knob = (ctx, s, lt, C) => { // 旋钮拧动，方法卡片翻面
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.75, lt));
+    G.disc(ctx, 560, 620, 160, C.fg);
+    ctx.save(); ctx.translate(560, 620); ctx.rotate(p * 2.5);
+    ctx.strokeStyle = C.acc; ctx.lineWidth = 14; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -120); ctx.stroke(); ctx.restore();
+    b16box(ctx, 1300, 620, 480, 320, p > 0.5 ? C.acc : C.fg);
+    b8txt(ctx, p > 0.5 ? '新方法' : '旧方法', 1300, 620, 56, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_card = (ctx, s, lt, C) => { // 成绩单盖章「已核对」
+    const D = s.vizDur;
+    b6doc(ctx, 800, 620, 420, 520, C.fg, C.bg, 1);
+    const q = E.oBack(inv(D * 0.35, D * 0.7, lt));
+    ctx.save(); ctx.translate(1300, 620); ctx.scale(q + 0.001, q + 0.001); ctx.rotate(-0.2);
+    G.disc(ctx, 0, 0, 150, B16GOLD); b8txt(ctx, '已核对', 0, 0, 40, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.bkt_end = (ctx, s, lt, C) => { // 模型说话气泡对上成绩单
+    const D = s.vizDur;
+    b16box(ctx, 560, 560, 480, 280, C.fg); b8txt(ctx, '模型说', 560, 560, 56, C.bg);
+    b6doc(ctx, 1360, 620, 360, 440, C.acc, C.bg, 1);
+    b16arrow(ctx, 820, 560, 1160, 560, C.fg, 10);
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #62 Historical Simulation ──
+  VIZ.hsm_stack = (ctx, s, lt, C) => { // 一摞历史日K被摊开重排，标题「Historical Simulation」
+    const D = s.vizDur; b6title(ctx, 'Historical Simulation', W / 2, 180, 64, C.fg, inv(0.05, D * 0.4, lt), 1700);
+    for (let i = 0; i < 8; i++) {
+      const p = clamp(inv(D * (0.1 + i * 0.08), D * (0.4 + i * 0.08), lt));
+      const x = lerp(900, 360 + i * 160, p); const y = lerp(620, 700, p);
+      b16box(ctx, x, y, 140, 200, i % 2 ? C.acc : C.fg, 12);
+      b8txt(ctx, '日', x, y, 36, i % 2 ? C.bg : C.bg);
+    }
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_title = (ctx, s, lt, C) => { // 标题「历史模拟法」
+    const D = s.vizDur; b6title(ctx, '历史模拟法', W / 2, 560, 110, C.fg, inv(0.05, D * 0.55, lt));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_tomorrow = (ctx, s, lt, C) => { // 历史日卡片贴到「明天」格子里
+    const D = s.vizDur;
+    b16box(ctx, 1400, 620, 420, 480, rgba(C.fg, 0.15));
+    ctx.strokeStyle = C.acc; ctx.lineWidth = 10; ctx.strokeRect(1190, 380, 420, 480);
+    b8txt(ctx, '明天', 1400, 320, 40, C.fg);
+    for (let i = 0; i < 5; i++) {
+      const p = clamp(inv(D * (0.1 + i * 0.12), D * (0.4 + i * 0.12), lt));
+      const x = lerp(400, 1400, p); const y = lerp(500 + i * 40, 620, p);
+      b16box(ctx, x, y, 160, 200, C.fg, 12); b8txt(ctx, '日' + (i + 1), x, y, 36, C.bg);
+    }
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_rank = (ctx, s, lt, C) => { // 排序后的亏损条，某一格亮成门槛，角标「可接 VaR」
+    const D = s.vizDur;
+    const hs = [80, 120, 160, 220, 280, 340, 420, 520];
+    hs.forEach((h, i) => {
+      const col = i === 5 ? B16LOSS : C.fg;
+      b16bar(ctx, 360 + i * 160, 900, 110, h, col);
+    });
+    tag(ctx, '门槛', 360 + 5 * 160, 280, C, inv(D * 0.35, D * 0.7, lt), { px: 36, bg: B16LOSS, fg: G.CREAM });
+    tag(ctx, '可接 VaR', 960, 980, C, inv(D * 0.45, D * 0.8, lt), { px: 32, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_fat = (ctx, s, lt, C) => { // 尾巴那几格特别厚
+    const D = s.vizDur;
+    const hs = [100, 120, 140, 160, 200, 280, 400, 520];
+    hs.forEach((h, i) => {
+      const fat = i >= 5;
+      b16bar(ctx, 360 + i * 160, 900, fat ? 140 : 100, h, fat ? B16ORANGE : C.fg);
+    });
+    tag(ctx, '肥尾', 1500, 280, C, inv(D * 0.4, D * 0.75, lt), { px: 40, bg: B16ORANGE, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_bolt = (ctx, s, lt, C) => { // 历史堆外出现一个从未见过的闪电，模型视而不见
+    const D = s.vizDur;
+    for (let i = 0; i < 6; i++) b16box(ctx, 500 + i * 30, 700 - i * 20, 280, 360, C.fg);
+    const q = E.oBack(inv(D * 0.3, D * 0.65, lt));
+    ctx.save(); ctx.translate(1400, 480); ctx.scale(q + 0.001, q + 0.001);
+    // lightning bolt
+    ctx.fillStyle = B16GOLD;
+    ctx.beginPath(); ctx.moveTo(0, -160); ctx.lineTo(60, -20); ctx.lineTo(10, -20); ctx.lineTo(80, 160); ctx.lineTo(-20, 20); ctx.lineTo(30, 20); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    tag(ctx, '未见过', 1400, 900, C, inv(D * 0.45, D * 0.8, lt), { px: 36, bg: B16LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_window = (ctx, s, lt, C) => { // 时间窗拉长或缩短，门槛线跟着跳
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.85, lt));
+    const w = 400 + p * 800;
+    ctx.strokeStyle = C.acc; ctx.lineWidth = 12; ctx.strokeRect(960 - w / 2, 500, w, 280);
+    b8txt(ctx, '时间窗', 960, 640, 48, C.fg);
+    const thrY = 400 - p * 80;
+    ctx.strokeStyle = B16LOSS; ctx.lineWidth = 8; ctx.setLineDash([12, 10]);
+    ctx.beginPath(); ctx.moveTo(300, thrY); ctx.lineTo(1620, thrY); ctx.stroke(); ctx.setLineDash([]);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.hsm_end = (ctx, s, lt, C) => { // 昨天日历给明天座位表盖章
+    const D = s.vizDur;
+    b16box(ctx, 560, 620, 420, 480, C.fg); b8txt(ctx, '昨天', 560, 620, 56, C.bg);
+    b16box(ctx, 1360, 620, 420, 480, C.acc); b8txt(ctx, '明天座位', 1360, 560, 40, C.bg);
+    const q = E.oBack(inv(D * 0.4, D * 0.75, lt));
+    ctx.save(); ctx.translate(1360, 740); ctx.scale(q + 0.001, q + 0.001); ctx.rotate(-0.15);
+    G.disc(ctx, 0, 0, 100, B16GOLD); b8txt(ctx, '盖章', 0, 0, 36, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  // ───────── finance-v003 scene library, batch 15 (theta / credit-rating / PD / LGD / EAD / EL-vs-UL, 2026-11-01) ─────────
+  // #53 Theta · #54 Credit Rating · #55 PD · #56 LGD · #57 EAD · #58 EL vs UL — 51 scenes.
+  Object.assign(VPAL, {
+    tht_hour: 'cream', tht_title: 'gold', tht_lock: 'cream', tht_neg: 'purple', tht_sand: 'cream', tht_steep: 'ochre', tht_gamma: 'cream', tht_end: 'ink',
+    crt_letters: 'cream', crt_agency: 'gold', crt_ig: 'cream', crt_junk: 'purple', crt_rate: 'cream', crt_opin: 'ochre', crt_lag: 'cream', crt_08: 'ink', crt_down: 'cream', crt_end: 'gold',
+    pd_q: 'cream', pd_title: 'gold', pd_year: 'cream', pd_hist: 'purple', pd_mkt: 'cream', pd_model: 'ochre', pd_three: 'cream', pd_end: 'ink',
+    lgd_q: 'cream', lgd_title: 'gold', lgd_form: 'cream', lgd_owe: 'purple', lgd_40: 'cream', lgd_col: 'ochre', lgd_senior: 'cream', lgd_end: 'ink',
+    ead_stop: 'cream', ead_title: 'gold', ead_line: 'cream', ead_draw: 'purple', ead_three: 'cream', ead_2: 'ochre', ead_8k: 'cream', ead_end: 'ink',
+    eul_two: 'cream', eul_el: 'gold', eul_mul: 'cream', eul_8k: 'purple', eul_cost: 'cream', eul_bad: 'ochre', eul_ul: 'cream', eul_cap: 'ink', eul_end: 'cream',
+  });
+  const B15LOSS = PAL.red.t[2], B15GAIN = PAL.green.t[2], B15GOLD = PAL.gold.t[2], B15ORANGE = PAL.ochre.t[2];
+  function b15box(ctx, x, y, w, h, col, r = 18) { ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, r); ctx.fill(); }
+  function b15arrow(ctx, x0, y0, x1, y1, col, w = 8) {
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const a = Math.atan2(y1 - y0, x1 - x0); ctx.translate(x1, y1); ctx.rotate(a);
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, -12); ctx.lineTo(-22, 12); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function b15bar(ctx, x, y, w, h, col) { ctx.fillStyle = col; ctx.fillRect(x - w / 2, y - h, w, h); }
+  function b15hourglass(ctx, x, y, s, col, sand, p) {
+    ctx.save(); ctx.translate(x, y); ctx.strokeStyle = col; ctx.fillStyle = sand; ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(-s, -s); ctx.lineTo(s, -s); ctx.lineTo(0, 0); ctx.lineTo(s, s); ctx.lineTo(-s, s); ctx.lineTo(0, 0); ctx.closePath(); ctx.stroke();
+    const h = s * 0.7 * clamp(p); ctx.fillRect(-s * 0.35, s - h - 8, s * 0.7, h); ctx.restore();
+  }
+
+  // ── #53 Theta ──
+  VIZ.tht_hour = (ctx, s, lt, C) => { // 沙漏立在期权卡片上，标题「Theta」
+    const D = s.vizDur; b6title(ctx, 'Theta', W / 2, 200, 120, C.fg, inv(0.05, D * 0.4, lt));
+    b15box(ctx, 960, 820, 420, 220, C.fg); b8txt(ctx, '期权', 960, 820, 56, C.bg);
+    b15hourglass(ctx, 960, 520, 140, C.acc, B15GOLD, clamp(inv(D * 0.2, D * 0.9, lt)));
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_title = (ctx, s, lt, C) => { // 日历翻一页，期权价值少一小块，标「Θ」
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.7, lt));
+    b15box(ctx, 560, 620, 360, 420, C.fg); b8txt(ctx, '日', 560, 520, 72, C.bg); b8txt(ctx, String(1 + Math.floor(p * 5)), 560, 680, 96, C.bg, { en: 1 });
+    b15bar(ctx, 1400, 900, 200, 360 - p * 120, C.acc);
+    const q = E.oBack(inv(D * 0.35, D * 0.7, lt));
+    ctx.save(); ctx.translate(1400, 320); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 160, 160, B15GOLD); b8txt(ctx, 'Θ', 0, 0, 96, C.bg, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_lock = (ctx, s, lt, C) => { // 其他输入锁住，只有日历在翻，角标「其他条件不变」
+    const D = s.vizDur;
+    ['现价', '行权价', '波动率'].forEach((t, i) => {
+      b15box(ctx, 360 + i * 280, 420, 220, 140, rgba(C.fg, 0.4)); b8txt(ctx, t, 360 + i * 280, 400, 36, C.bg); b8txt(ctx, '锁', 360 + i * 280, 460, 32, C.bg);
+    });
+    const p = clamp(inv(D * 0.2, D * 0.85, lt));
+    b15box(ctx, 960, 820, 360, 220, C.acc); b8txt(ctx, '日历', 960, 780, 40, C.bg); b8txt(ctx, String(1 + Math.floor(p * 8)), 960, 860, 72, C.bg, { en: 1 });
+    tag(ctx, '其他条件不变', 960, 240, C, inv(D * 0.35, D * 0.7, lt), { px: 36, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_neg = (ctx, s, lt, C) => { // 价值条每天缩一截，标「通常为负」
+    const D = s.vizDur; const p = clamp(inv(D * 0.1, D * 0.85, lt));
+    for (let i = 0; i < 5; i++) {
+      const h = 400 - i * 50 * p;
+      b15bar(ctx, 480 + i * 240, 900, 140, Math.max(40, h), i % 2 ? C.acc : C.fg);
+    }
+    tag(ctx, '通常为负', 960, 280, C, inv(D * 0.4, D * 0.75, lt), { px: 40, bg: B15LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_sand = (ctx, s, lt, C) => { // 沙漏里的沙子变成价值，慢慢漏走
+    const D = s.vizDur; const p = clamp(inv(D * 0.1, D * 0.9, lt));
+    b15hourglass(ctx, 960, 560, 200, C.fg, B15GOLD, p);
+    b15bar(ctx, 1480, 900, 160, 320 * (1 - p), C.acc);
+    tag(ctx, '价值漏走', 1480, 280, C, inv(D * 0.4, D * 0.7, lt), { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_steep = (ctx, s, lt, C) => { // 临近到期时价值曲线弯得更陡
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.85, lt));
+    const pts = [];
+    for (let i = 0; i <= 24; i++) {
+      const t = i / 24; pts.push([400 + i * 50, 400 + Math.pow(t, 1 + 2 * p) * 420]);
+    }
+    ctx.save(); ctx.strokeStyle = C.acc; ctx.lineWidth = 12; ctx.lineCap = 'round'; ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.stroke(); ctx.restore();
+    tag(ctx, '临近到期', 960, 260, C, inv(D * 0.4, D * 0.7, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_gamma = (ctx, s, lt, C) => { // 天平：一边「Gamma」，一边「时间损耗」，角标「接 #51」
+    const D = s.vizDur;
+    ctx.fillStyle = C.fg; ctx.fillRect(920, 500, 80, 320);
+    ctx.fillRect(540, 488, 840, 24);
+    b15box(ctx, 640, 400, 320, 160, C.acc); b8txt(ctx, 'Gamma', 640, 400, 48, C.bg, { en: 1 });
+    b15box(ctx, 1280, 400, 320, 160, B15LOSS); b8txt(ctx, '时间损耗', 1280, 400, 44, C.bg);
+    tag(ctx, '接 #51', 960, 980, C, inv(D * 0.35, D * 0.7, lt), { px: 32, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.tht_end = (ctx, s, lt, C) => { // 沙漏和价签并排，记忆点浮出
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.55, lt));
+    ctx.save(); ctx.translate(640, 620); ctx.scale(k + 0.001, k + 0.001);
+    b15hourglass(ctx, 0, 0, 160, C.fg, B15GOLD, 0.7); ctx.restore();
+    ctx.save(); ctx.translate(1280, 620); ctx.scale(k + 0.001, k + 0.001);
+    b15box(ctx, 0, 0, 320, 200, C.acc); b8txt(ctx, '价签', 0, 0, 56, C.bg); ctx.restore();
+    tag(ctx, '等待本身就要付钱', 960, 980, C, inv(D * 0.45, D * 0.8, lt), { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #54 Credit Rating ──
+  VIZ.crt_letters = (ctx, s, lt, C) => { // 一排字母等级卡 AAA、AA、A、BBB、BB……，标题「Credit Rating」
+    const D = s.vizDur; b6title(ctx, 'Credit Rating', W / 2, 200, 72, C.fg, inv(0.05, D * 0.4, lt), 1600);
+    const labs = ['AAA', 'AA', 'A', 'BBB', 'BB', 'B'];
+    labs.forEach((t, i) => {
+      const p = E.oBack(inv(D * (0.1 + i * 0.08), D * (0.35 + i * 0.08), lt));
+      ctx.save(); ctx.translate(280 + i * 280, 700); ctx.scale(p + 0.001, p + 0.001);
+      b15box(ctx, 0, 0, 220, 280, i < 4 ? B15GAIN : B15ORANGE); b8txt(ctx, t, 0, 0, 48, C.bg, { en: 1 }); ctx.restore();
+    });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_agency = (ctx, s, lt, C) => { // 一座虚构的评级机构大楼盖章
+    const D = s.vizDur; b7tower(ctx, 700, 980, 320, 620, C.fg, C.bg);
+    const p = E.oBack(inv(D * 0.3, D * 0.65, lt));
+    ctx.save(); ctx.translate(1400, 620); ctx.scale(p + 0.001, p + 0.001); ctx.rotate(-0.2);
+    G.disc(ctx, 0, 0, 160, C.acc); b8txt(ctx, '评级', 0, 0, 56, C.bg); ctx.restore();
+    tag(ctx, '虚构示意', 700, 280, C, inv(D * 0.4, D * 0.7, lt), { px: 32, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_ig = (ctx, s, lt, C) => { // AAA 到 BBB 这一段亮绿，标「投资级」
+    const D = s.vizDur;
+    ['AAA', 'AA', 'A', 'BBB'].forEach((t, i) => {
+      b15box(ctx, 360 + i * 360, 620, 280, 260, B15GAIN); b8txt(ctx, t, 360 + i * 360, 620, 56, C.bg, { en: 1 });
+    });
+    tag(ctx, '投资级', 960, 320, C, inv(D * 0.35, D * 0.7, lt), { px: 48, bg: B15GAIN, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_junk = (ctx, s, lt, C) => { // BB 及以下标橙，标「投机级 / 高收益级」
+    const D = s.vizDur;
+    ['BB', 'B', 'CCC'].forEach((t, i) => {
+      b15box(ctx, 480 + i * 480, 620, 360, 280, B15ORANGE); b8txt(ctx, t, 480 + i * 480, 620, 64, C.bg, { en: 1 });
+    });
+    tag(ctx, '投机级 / 高收益级', 960, 300, C, inv(D * 0.35, D * 0.7, lt), { px: 40, bg: B15ORANGE, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_rate = (ctx, s, lt, C) => { // 利率柱随等级降低而升高（假设数字）
+    const D = s.vizDur; const labs = ['AAA', 'A', 'BB', 'B'];
+    labs.forEach((t, i) => {
+      const p = clamp(inv(D * (0.1 + i * 0.12), D * (0.4 + i * 0.12), lt));
+      b15bar(ctx, 400 + i * 380, 900, 160, 120 + i * 120 * p, C.acc);
+      b8txt(ctx, t, 400 + i * 380, 980, 36, C.fg, { en: 1 });
+    });
+    tag(ctx, '假设', 960, 240, C, inv(D * 0.35, D * 0.65, lt), { px: 36, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_opin = (ctx, s, lt, C) => { // 印章旁出现「意见」二字，划掉「承诺」
+    const D = s.vizDur;
+    G.disc(ctx, 560, 620, 180, C.fg); b8txt(ctx, '评级', 560, 620, 56, C.bg);
+    b15box(ctx, 1100, 520, 320, 160, C.acc); b8txt(ctx, '意见', 1100, 520, 56, C.bg);
+    b15box(ctx, 1500, 720, 320, 160, rgba(C.fg, 0.35)); b8txt(ctx, '承诺', 1500, 720, 56, C.bg);
+    const p = clamp(inv(D * 0.4, D * 0.75, lt));
+    ctx.save(); ctx.strokeStyle = B15LOSS; ctx.lineWidth = 14; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(1360, 660); ctx.lineTo(1360 + 280 * p, 660 + 120 * p); ctx.stroke(); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_lag = (ctx, s, lt, C) => { // 一只钟表落后于实时曲线
+    const D = s.vizDur;
+    // curve
+    ctx.save(); ctx.strokeStyle = C.acc; ctx.lineWidth = 10; ctx.beginPath();
+    for (let i = 0; i <= 20; i++) { const x = 400 + i * 40; const y = 500 + Math.sin(i * 0.4 + lt) * 80 - i * 8; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke(); ctx.restore();
+    G.disc(ctx, 1400, 780, 160, C.fg);
+    ctx.save(); ctx.translate(1400, 780); ctx.rotate(-1.2);
+    ctx.strokeStyle = B15LOSS; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -120); ctx.stroke(); ctx.restore();
+    tag(ctx, '慢半拍', 1400, 980, C, inv(D * 0.4, D * 0.75, lt), { px: 36, bg: B15LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_08 = (ctx, s, lt, C) => { // 时间轴「2008」，一摞 AAA 卡片（不点名机构）
+    const D = s.vizDur;
+    b15box(ctx, 960, 320, 420, 140, C.fg); b8txt(ctx, '2008', 960, 320, 72, C.bg, { en: 1 });
+    for (let i = 0; i < 5; i++) {
+      const p = E.oBack(inv(D * (0.15 + i * 0.08), D * (0.4 + i * 0.08), lt));
+      ctx.save(); ctx.translate(700 + i * 40, 700 - i * 20); ctx.scale(p + 0.001, p + 0.001);
+      b15box(ctx, 0, 0, 360, 200, B15GAIN); b8txt(ctx, 'AAA', 0, 0, 64, C.bg, { en: 1 }); ctx.restore();
+    }
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_down = (ctx, s, lt, C) => { // AAA 卡片一张张降级变色，角标「见 MBS」
+    const D = s.vizDur; const labs = ['AAA', 'AA', 'A', 'BBB', 'BB'];
+    labs.forEach((t, i) => {
+      const p = clamp(inv(D * (0.1 + i * 0.12), D * (0.35 + i * 0.12), lt));
+      const col = p > 0.5 ? B15ORANGE : B15GAIN;
+      b15box(ctx, 280 + i * 340, 620, 260, 280, col); b8txt(ctx, t, 280 + i * 340, 620, 52, C.bg, { en: 1 });
+    });
+    tag(ctx, '见 MBS', 960, 280, C, inv(D * 0.4, D * 0.75, lt), { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.crt_end = (ctx, s, lt, C) => { // 字母卡片和问号并排
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.55, lt));
+    ctx.save(); ctx.translate(640, 620); ctx.scale(k + 0.001, k + 0.001);
+    b15box(ctx, 0, 0, 360, 280, C.fg); b8txt(ctx, 'AAA', 0, 0, 72, C.bg, { en: 1 }); ctx.restore();
+    ctx.save(); ctx.translate(1280, 620); ctx.scale(k + 0.001, k + 0.001);
+    b8txt(ctx, '?', 0, 0, 200, B15LOSS, { en: 1 }); ctx.restore();
+    tag(ctx, '参考，不是护身符', 960, 980, C, inv(D * 0.45, D * 0.8, lt), { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #55 PD ──
+  VIZ.pd_q = (ctx, s, lt, C) => { // 一张借款方卡片上方一个问号，标题「Probability of Default」
+    const D = s.vizDur; b6title(ctx, 'Probability of Default', W / 2, 200, 56, C.fg, inv(0.05, D * 0.4, lt), 1700);
+    b15box(ctx, 960, 780, 480, 280, C.fg); b8txt(ctx, '借款方', 960, 780, 56, C.bg);
+    const q = E.oBack(inv(D * 0.25, D * 0.6, lt));
+    ctx.save(); ctx.translate(960, 420); ctx.scale(q + 0.001, q + 0.001);
+    b8txt(ctx, '?', 0, 0, 160, B15LOSS, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_title = (ctx, s, lt, C) => { // 标题「违约概率（PD）」
+    const D = s.vizDur; b6title(ctx, 'PD', W / 2, 420, 200, C.fg, inv(0.05, D * 0.5, lt));
+    tag(ctx, '违约概率', 960, 620, C, inv(D * 0.35, D * 0.7, lt), { px: 48, bg: C.acc, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_year = (ctx, s, lt, C) => { // 一年日历框住卡片
+    const D = s.vizDur;
+    b15box(ctx, 960, 620, 900, 560, rgba(C.fg, 0.15));
+    ctx.strokeStyle = C.acc; ctx.lineWidth = 14; ctx.strokeRect(510, 340, 900, 560);
+    b15box(ctx, 960, 620, 360, 220, C.fg); b8txt(ctx, '一年', 960, 620, 64, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_hist = (ctx, s, lt, C) => { // 同等级的历史卡片堆，几张标红，角标「假设数据」
+    const D = s.vizDur;
+    for (let i = 0; i < 12; i++) {
+      const x = 420 + (i % 6) * 220; const y = 480 + Math.floor(i / 6) * 280;
+      const bad = i === 2 || i === 7 || i === 10;
+      b15box(ctx, x, y, 180, 220, bad ? B15LOSS : C.fg);
+    }
+    tag(ctx, '假设数据', 960, 240, C, inv(D * 0.35, D * 0.7, lt), { px: 36, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_mkt = (ctx, s, lt, C) => { // 价格曲线上反推出一个概率
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.8, lt));
+    ctx.save(); ctx.strokeStyle = C.fg; ctx.lineWidth = 10; ctx.beginPath();
+    for (let i = 0; i <= 20; i++) { const x = 360 + i * 50; const y = 700 - Math.sin(i * 0.3) * 100 - i * 4; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.stroke(); ctx.restore();
+    b15arrow(ctx, 1200, 520, 1500, 400, C.acc, 10);
+    const q = E.oBack(inv(D * 0.4, D * 0.75, lt));
+    ctx.save(); ctx.translate(1600, 360); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 220, 140, C.acc); b8txt(ctx, 'PD', 0, 0, 56, C.bg, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_model = (ctx, s, lt, C) => { // 财务数据输入模型盒子，输出一个概率
+    const D = s.vizDur;
+    b15box(ctx, 420, 620, 280, 360, C.fg); b8txt(ctx, '财务', 420, 620, 48, C.bg);
+    b15arrow(ctx, 600, 620, 820, 620, C.fg, 10);
+    b15box(ctx, 1000, 620, 320, 400, C.acc); b8txt(ctx, '模型', 1000, 620, 56, C.bg);
+    b15arrow(ctx, 1200, 620, 1420, 620, C.fg, 10);
+    const q = E.oBack(inv(D * 0.35, D * 0.7, lt));
+    ctx.save(); ctx.translate(1580, 620); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 220, 160, B15GOLD); b8txt(ctx, 'PD', 0, 0, 56, C.bg, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_three = (ctx, s, lt, C) => { // 三个概率数字并排比对
+    const D = s.vizDur;
+    ['历史', '市场', '模型'].forEach((t, i) => {
+      const p = E.oBack(inv(D * (0.15 + i * 0.12), D * (0.4 + i * 0.12), lt));
+      ctx.save(); ctx.translate(400 + i * 560, 620); ctx.scale(p + 0.001, p + 0.001);
+      b15box(ctx, 0, 0, 400, 320, C.fg); b8txt(ctx, t, 0, -40, 44, C.bg); b8txt(ctx, ['2.1%', '1.8%', '2.4%'][i], 0, 60, 56, C.acc, { en: 1 }); ctx.restore();
+    });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.pd_end = (ctx, s, lt, C) => { // 问号放大，旁边写「会不会出事」
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.55, lt));
+    ctx.save(); ctx.translate(700, 560); ctx.scale(k + 0.001, k + 0.001);
+    b8txt(ctx, '?', 0, 0, 240, B15LOSS, { en: 1 }); ctx.restore();
+    tag(ctx, '会不会出事', 1300, 560, C, inv(D * 0.4, D * 0.75, lt), { px: 48, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #56 LGD ──
+  VIZ.lgd_q = (ctx, s, lt, C) => { // 违约的借据旁一个百分比问号，标题「Loss Given Default」
+    const D = s.vizDur; b6title(ctx, 'Loss Given Default', W / 2, 200, 64, C.fg, inv(0.05, D * 0.4, lt), 1600);
+    b6doc(ctx, 700, 700, 280, 360, C.fg, C.bg, 1);
+    const q = E.oBack(inv(D * 0.3, D * 0.65, lt));
+    ctx.save(); ctx.translate(1300, 620); ctx.scale(q + 0.001, q + 0.001);
+    b8txt(ctx, '%?', 0, 0, 140, B15LOSS, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_title = (ctx, s, lt, C) => { // 标题「违约损失率（LGD）」
+    const D = s.vizDur;
+    b15bar(ctx, 700, 900, 220, 420, B15LOSS);
+    b15bar(ctx, 700, 900, 220, 250, B15GAIN);
+    const q = E.oBack(inv(D * 0.2, D * 0.6, lt));
+    ctx.save(); ctx.translate(1300, 560); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 520, 280, C.fg); b8txt(ctx, 'LGD', 0, -40, 72, C.bg, { en: 1 }); b8txt(ctx, '违约损失率', 0, 60, 40, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_form = (ctx, s, lt, C) => { // 画面公式 LGD = 1 − 回收率
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.6, lt));
+    ctx.save(); ctx.translate(960, 560); ctx.scale(k + 0.001, k + 0.001);
+    b15box(ctx, 0, 0, 1100, 280, C.fg);
+    b8txt(ctx, 'LGD  ≈  1 − 回收率', 0, 0, 64, C.bg, { en: 1 });
+    ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_owe = (ctx, s, lt, C) => { // 欠款柱 100 万，收回部分 60 万，角标「假设」
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.75, lt));
+    b15bar(ctx, 700, 900, 220, 520, C.fg); b8txt(ctx, '100万', 700, 980, 36, C.fg);
+    b15bar(ctx, 1200, 900, 220, 520 * 0.6 * p, B15GAIN); b8txt(ctx, '60万', 1200, 980, 36, C.fg);
+    tag(ctx, '假设', 960, 260, C, inv(D * 0.35, D * 0.65, lt), { px: 36, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_40 = (ctx, s, lt, C) => { // 剩下的 40 万标红「损失」
+    const D = s.vizDur;
+    b15bar(ctx, 700, 900, 200, 500, rgba(C.fg, 0.35));
+    b15bar(ctx, 700, 900, 200, 300, B15GAIN);
+    b15bar(ctx, 700, 600, 200, 200, B15LOSS);
+    const q = E.oBack(inv(D * 0.3, D * 0.65, lt));
+    ctx.save(); ctx.translate(1200, 500); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 360, 180, B15LOSS); b8txt(ctx, '损失 40%', 0, 0, 48, G.CREAM); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_col = (ctx, s, lt, C) => { // 欠款旁放一块抵押物，损失块变小
+    const D = s.vizDur; const p = clamp(inv(D * 0.2, D * 0.75, lt));
+    b15bar(ctx, 640, 900, 200, 480, C.fg);
+    b6crate(ctx, 1100, 820, 160, C.acc, C.bg);
+    b15bar(ctx, 1500, 900, 180, 280 * (1 - 0.5 * p), B15LOSS);
+    tag(ctx, '有抵押', 1100, 560, C, inv(D * 0.4, D * 0.7, lt), { px: 36, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_senior = (ctx, s, lt, C) => { // 排队受偿：前排先拿到钱，后排剩得少
+    const D = s.vizDur;
+    for (let i = 0; i < 4; i++) {
+      const p = clamp(inv(D * (0.1 + i * 0.12), D * (0.4 + i * 0.12), lt));
+      b6person(ctx, 400 + i * 320, 820, 1.2, C.fg);
+      b15bar(ctx, 400 + i * 320, 560, 100, 200 * (1 - i * 0.2) * p, i === 0 ? B15GAIN : C.acc);
+    }
+    tag(ctx, '清偿顺序', 960, 280, C, inv(D * 0.4, D * 0.7, lt), { px: 40, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.lgd_end = (ctx, s, lt, C) => { // 损失比例块高亮
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.55, lt));
+    ctx.save(); ctx.translate(960, 560); ctx.scale(k + 0.001, k + 0.001);
+    b15box(ctx, 0, 0, 520, 320, B15LOSS); b8txt(ctx, '亏几成', 0, 0, 72, G.CREAM); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #57 EAD ──
+  VIZ.ead_stop = (ctx, s, lt, C) => { // 倒计时停在「违约」，欠款金额亮起，标题「Exposure at Default」
+    const D = s.vizDur; b6title(ctx, 'Exposure at Default', W / 2, 200, 64, C.fg, inv(0.05, D * 0.4, lt), 1600);
+    b15box(ctx, 640, 620, 420, 280, B15LOSS); b8txt(ctx, '违约', 640, 620, 72, G.CREAM);
+    const q = E.oBack(inv(D * 0.35, D * 0.7, lt));
+    ctx.save(); ctx.translate(1360, 620); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 420, 280, C.acc); b8txt(ctx, '欠款', 0, 0, 64, C.bg); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_title = (ctx, s, lt, C) => { // 标题「违约风险暴露（EAD）」
+    const D = s.vizDur;
+    b15box(ctx, 960, 520, 1100, 280, C.fg);
+    b8txt(ctx, '违约风险暴露', 960, 480, 56, C.bg);
+    const q = E.oBack(inv(D * 0.25, D * 0.65, lt));
+    ctx.save(); ctx.translate(960, 620); ctx.scale(q + 0.001, q + 0.001);
+    b15box(ctx, 0, 0, 280, 100, C.acc); b8txt(ctx, 'EAD', 0, 0, 64, C.bg, { en: 1 }); ctx.restore();
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_line = (ctx, s, lt, C) => { // 一张额度卡，已用一部分，剩余部分虚线
+    const D = s.vizDur;
+    b15box(ctx, 960, 620, 1000, 360, C.fg);
+    b15box(ctx, 700, 620, 420, 240, C.acc); b8txt(ctx, '已用', 700, 620, 56, C.bg);
+    ctx.save(); ctx.setLineDash([16, 12]); ctx.strokeStyle = C.bg; ctx.lineWidth = 8;
+    ctx.strokeRect(1080, 500, 360, 240); ctx.restore();
+    b8txt(ctx, '剩余', 1260, 620, 48, C.bg);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_draw = (ctx, s, lt, C) => { // 虚线部分被提走，欠款变大
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.8, lt));
+    b15bar(ctx, 700, 900, 220, 280 + p * 240, C.acc);
+    b15arrow(ctx, 1100, 500, 1100 - 200 * p, 700, B15LOSS, 12);
+    tag(ctx, '提走', 1300, 480, C, inv(D * 0.4, D * 0.7, lt), { px: 40, bg: B15LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_three = (ctx, s, lt, C) => { // PD、LGD、EAD 三张卡片并排
+    const D = s.vizDur;
+    const labs = ['PD', 'LGD', 'EAD'];
+    labs.forEach((t, i) => {
+      const p = E.oBack(inv(D * (0.12 + i * 0.12), D * (0.4 + i * 0.12), lt));
+      const x = 360 + i * 500;
+      ctx.save(); ctx.translate(x, 560); ctx.scale(p + 0.001, p + 0.001);
+      G.disc(ctx, 0, 0, 140, i === 2 ? C.acc : C.fg); b8txt(ctx, t, 0, 0, 56, C.bg, { en: 1 }); ctx.restore();
+      if (i < 2) b8txt(ctx, '×', x + 250, 560, 72, C.fg, { en: 1 });
+    });
+    tag(ctx, '三样一乘', 960, 900, C, inv(D * 0.45, D * 0.8, lt), { px: 40, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_2 = (ctx, s, lt, C) => { // EAD 100 万、PD 2%，角标「假设」
+    const D = s.vizDur;
+    b15box(ctx, 960, 420, 900, 160, C.fg); b8txt(ctx, 'EAD ≈ 100万', 960, 420, 56, C.bg);
+    b15box(ctx, 960, 680, 900, 160, C.acc); b8txt(ctx, 'PD ≈ 2%', 960, 680, 56, C.bg, { en: 1 });
+    tag(ctx, '假设', 960, 920, C, inv(D * 0.35, D * 0.65, lt), { px: 36, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_8k = (ctx, s, lt, C) => { // 画面公式 EL = PD × LGD × EAD = 8,000
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.6, lt));
+    ctx.save(); ctx.translate(960, 500); ctx.scale(k + 0.001, k + 0.001);
+    b15box(ctx, 0, 0, 1400, 240, C.fg);
+    b8txt(ctx, 'EL ≈ PD × LGD × EAD', 0, 0, 52, C.bg, { en: 1 });
+    ctx.restore();
+    tag(ctx, '8,000', 960, 820, C, inv(D * 0.45, D * 0.8, lt), { px: 64, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.ead_end = (ctx, s, lt, C) => { // 三张卡片相乘，落成一个数字
+    const D = s.vizDur;
+    ['会不会', '亏几成', '欠多少'].forEach((t, i) => {
+      b15box(ctx, 360 + i * 400, 420, 320, 180, C.fg); b8txt(ctx, t, 360 + i * 400, 420, 40, C.bg);
+    });
+    const p = clamp(inv(D * 0.3, D * 0.75, lt));
+    b15arrow(ctx, 960, 540, 960, 540 + 200 * p, C.acc, 12);
+    if (p > 0.5) { b15box(ctx, 960, 860, 400, 160, B15GOLD); b8txt(ctx, '预期损失', 960, 860, 48, C.bg); }
+    vizCaption(ctx, s, lt, C);
+  };
+
+  // ── #58 EL vs UL ──
+  VIZ.eul_two = (ctx, s, lt, C) => { // 两堆钱并排：左边标「平均」，右边标「坏年份」，标题「Expected vs Unexpected Loss」
+    const D = s.vizDur; b6title(ctx, 'Expected vs Unexpected Loss', W / 2, 180, 52, C.fg, inv(0.05, D * 0.4, lt), 1700);
+    b15bar(ctx, 560, 900, 260, 280, C.fg); tag(ctx, '平均', 560, 980, C, 1, { px: 32, bg: C.fg, fg: C.bg });
+    b15bar(ctx, 1360, 900, 260, 480, B15LOSS); tag(ctx, '坏年份', 1360, 980, C, 1, { px: 32, bg: B15LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_el = (ctx, s, lt, C) => { // 左边那堆亮起，标题「EL」
+    const D = s.vizDur;
+    b15bar(ctx, 700, 900, 280, 360, B15GOLD);
+    b15bar(ctx, 1300, 900, 280, 480, rgba(C.fg, 0.25));
+    tag(ctx, 'EL 预期损失', 700, 280, C, inv(D * 0.35, D * 0.7, lt), { px: 40, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_mul = (ctx, s, lt, C) => { // PD、LGD、EAD 三张卡片相乘，角标「接 EAD」
+    const D = s.vizDur;
+    const cols = [C.fg, C.acc, B15GOLD];
+    ['PD', 'LGD', 'EAD'].forEach((t, i) => {
+      const p = E.oBack(inv(D * (0.12 + i * 0.12), D * (0.4 + i * 0.12), lt));
+      ctx.save(); ctx.globalAlpha = 0.55 + 0.45 * p; ctx.translate(560 + i * 400, 560);
+      G.disc(ctx, 0, 0, 200, cols[i]); b8txt(ctx, t, 0, 0, 64, C.bg, { en: 1 }); ctx.restore();
+    });
+    tag(ctx, '接 EAD', 960, 920, C, inv(D * 0.45, D * 0.8, lt), { px: 32, bg: C.fg, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_8k = (ctx, s, lt, C) => { // 数字 8,000，角标「假设」
+    const D = s.vizDur; const k = E.oBack(inv(D * 0.15, D * 0.55, lt));
+    ctx.save(); ctx.translate(960, 560); ctx.scale(k + 0.001, k + 0.001);
+    b8txt(ctx, '8,000', 0, 0, 160, C.fg, { en: 1 }); ctx.restore();
+    tag(ctx, '假设', 960, 820, C, inv(D * 0.4, D * 0.75, lt), { px: 36, bg: B15GOLD, fg: C.bg });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_cost = (ctx, s, lt, C) => { // 拨备账户和定价表各收下一部分
+    const D = s.vizDur;
+    b15box(ctx, 560, 620, 480, 360, C.fg); b8txt(ctx, '拨备', 560, 620, 64, C.bg);
+    b15box(ctx, 1360, 620, 480, 360, C.acc); b8txt(ctx, '定价', 1360, 620, 64, C.bg);
+    const p = clamp(inv(D * 0.2, D * 0.7, lt));
+    b15bar(ctx, 960, 320, 120, 80 * p, B15GOLD);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_bad = (ctx, s, lt, C) => { // 右边那堆突然升高，超过平均线
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.8, lt));
+    ctx.strokeStyle = C.fg; ctx.lineWidth = 6; ctx.setLineDash([12, 10]);
+    ctx.beginPath(); ctx.moveTo(300, 620); ctx.lineTo(1700, 620); ctx.stroke(); ctx.setLineDash([]);
+    b15bar(ctx, 700, 900, 240, 280, C.fg);
+    b15bar(ctx, 1300, 900, 240, 280 + p * 280, B15LOSS);
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_ul = (ctx, s, lt, C) => { // 高出平均的部分标红「UL」
+    const D = s.vizDur;
+    b15bar(ctx, 960, 900, 280, 300, C.fg);
+    b15bar(ctx, 960, 600, 280, 220, B15LOSS);
+    tag(ctx, 'UL 非预期损失', 960, 280, C, inv(D * 0.35, D * 0.7, lt), { px: 40, bg: B15LOSS, fg: G.CREAM });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_cap = (ctx, s, lt, C) => { // 资本缓冲垫顶住红块
+    const D = s.vizDur;
+    b15box(ctx, 960, 820, 700, 160, C.fg); b8txt(ctx, '资本缓冲', 960, 820, 48, C.bg);
+    const p = clamp(inv(D * 0.2, D * 0.7, lt));
+    b15box(ctx, 960, 520 - p * 40, 400, 200, B15LOSS); b8txt(ctx, 'UL', 960, 520 - p * 40, 64, G.CREAM, { en: 1 });
+    vizCaption(ctx, s, lt, C);
+  };
+  VIZ.eul_end = (ctx, s, lt, C) => { // 左右两堆分别落入「成本」和「资本」两个箱子
+    const D = s.vizDur; const p = clamp(inv(D * 0.15, D * 0.8, lt));
+    b15box(ctx, 560, 860, 420, 200, C.fg); b8txt(ctx, '成本', 560, 860, 56, C.bg);
+    b15box(ctx, 1360, 860, 420, 200, C.acc); b8txt(ctx, '资本', 1360, 860, 56, C.bg);
+    b15bar(ctx, 560, lerp(400, 700, p), 180, 160, B15GOLD);
+    b15bar(ctx, 1360, lerp(400, 700, p), 180, 220, B15LOSS);
+    vizCaption(ctx, s, lt, C);
+  };
   // ───────── finance-v003 scene library, batch 14 (BSM / binomial / delta / gamma / vega, 2026-11-01) ─────────
   // #48 BSM · #49 Binomial Tree · #50 Delta · #51 Gamma · #52 Vega — 41 scenes.
   // Rules: no tickers/funds/K-lines/gambling; 「假设」 for made-up numbers; avoid ticket/door/giftbox layouts of option-long & put-call-parity.
